@@ -1,4 +1,4 @@
-package conga.ai.list;
+package conga.ai.api;
 
 import org.junit.jupiter.api.Test;
 

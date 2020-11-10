@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    implementation project(':utilities')
+    implementation project(':api')
 }
 
 application {
