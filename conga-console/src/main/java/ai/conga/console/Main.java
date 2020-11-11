@@ -4,11 +4,12 @@ import ai.conga.core.domain.Colour;
 
 public class Main {
     public static void main(String... args) {
-        CongaBoard board = new CongaBoard(4, 4);
+        CongaBoard board = new CongaBoard();
         board.display();
-        Colour test = Colour.BLACK;
-        test = test.nextTurn();
-        test = Colour.NONE;
-        System.out.println(test.nextTurn().ordinal());
+
+        CongaTile tile =  board.getTile(0, 1);
+        CongaPlayerMove playerMove = new CongaPlayerMove(tile, 1, Colour.BLACK);
+
+        playerMove.getCurrentlyMovedBoard(board).display();
     }
 }
