@@ -1,8 +1,5 @@
 package ai.conga.core.domain;
 
-/**
- *
- */
 public enum MoveDirection {
     EAST("East"),
     NORTH_EAST("North East"),

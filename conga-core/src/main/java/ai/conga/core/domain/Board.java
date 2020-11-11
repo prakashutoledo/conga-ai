@@ -22,6 +22,17 @@ public abstract class Board<T extends Tile> {
 
     public abstract void display();
 
+    public abstract void updateBoard(T tileToUpdate);
+
+    /**
+     * Returns the deep copy of {@link T} if given row and column index are valid index and are matched
+     *
+     * @param rowIndex a row index of board to look at
+     * @param columnIndex a row column index of board to look at
+     * @return deep copy of {@link T} of matching row and column index from board
+     */
+    public abstract T getTile(int rowIndex, int columnIndex);
+
     public int getRows() {
         return rows;
     }

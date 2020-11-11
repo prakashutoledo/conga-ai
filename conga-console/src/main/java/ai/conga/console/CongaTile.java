@@ -6,9 +6,6 @@ import ai.conga.core.domain.Tile;
 
 import static ai.conga.core.domain.Colour.*;
 
-/**
- *
- */
 public class CongaTile extends Tile implements Copy<CongaTile> {
     private int stoneCount;
     private Colour tileColour;

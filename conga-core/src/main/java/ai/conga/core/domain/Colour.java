@@ -36,6 +36,7 @@ public enum Colour {
     public String getTextId() {
         return textId;
     }
+    
     public abstract Colour nextTurn();
 
     @Override
