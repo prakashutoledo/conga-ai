@@ -1,4 +1,4 @@
-package conga.ai.api;
+package ai.conga.core.domain;
 
 public abstract class Move<T extends Tile> {
     protected T toTile;

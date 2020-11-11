@@ -1,10 +1,10 @@
-package conga.ai.app;
+package ai.conga.console;
 
-import conga.ai.api.Colour;
-import conga.ai.api.Copy;
-import conga.ai.api.Tile;
+import ai.conga.core.domain.Colour;
+import ai.conga.core.domain.Copy;
+import ai.conga.core.domain.Tile;
 
-import static conga.ai.api.Colour.*;
+import static ai.conga.core.domain.Colour.*;
 
 /**
  *

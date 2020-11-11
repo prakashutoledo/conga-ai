@@ -1,6 +1,4 @@
-package conga.ai.api;
-
-import java.util.List;
+package ai.conga.core.domain;
 
 public abstract class Player<T extends Colour, B extends Board> {
     public abstract T getPlayerColour();

@@ -1,4 +1,4 @@
-package conga.ai.api;
+package ai.conga.core.domain;
 
 /**
  * Abstract Tile class

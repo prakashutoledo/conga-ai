@@ -1,6 +1,6 @@
-package conga.ai.app;
+package ai.conga.console;
 
-import conga.ai.api.Colour;
+import ai.conga.core.domain.Colour;
 
 public class Main {
     public static void main(String... args) {

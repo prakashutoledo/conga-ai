@@ -1,8 +1,8 @@
-package conga.ai.app;
+package ai.conga.console;
 
-import conga.ai.api.Board;
-import conga.ai.api.Colour;
-import conga.ai.api.Copy;
+import ai.conga.core.domain.Board;
+import ai.conga.core.domain.Colour;
+import ai.conga.core.domain.Copy;
 
 import static java.lang.System.out;
 

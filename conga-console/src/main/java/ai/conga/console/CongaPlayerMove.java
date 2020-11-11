@@ -1,8 +1,8 @@
-package conga.ai.app;
+package ai.conga.console;
 
-import conga.ai.api.Colour;
-import conga.ai.api.Copy;
-import conga.ai.api.Move;
+import ai.conga.core.domain.Colour;
+import ai.conga.core.domain.Copy;
+import ai.conga.core.domain.Move;
 
 public class CongaPlayerMove extends Move<CongaTile> implements Copy<CongaPlayerMove> {
 
