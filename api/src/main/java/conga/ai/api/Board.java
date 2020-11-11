@@ -5,7 +5,7 @@ package conga.ai.api;
  *
  * @param <T> type of Tile
  */
-public abstract class Board<T extends Tile, P extends Player> {
+public abstract class Board<T extends Tile> {
     protected int rows;
     protected int columns;
     protected T[][] board;
@@ -18,7 +18,9 @@ public abstract class Board<T extends Tile, P extends Player> {
 
     protected abstract void initializeBoardProperties();
 
-    protected abstract boolean hasNextMove();
+    public abstract int evaluateHeuristics();
+
+    public abstract void display();
 
     public int getRows() {
         return rows;
@@ -35,6 +37,4 @@ public abstract class Board<T extends Tile, P extends Player> {
     public void setColumns(int columns) {
         this.columns = columns;
     }
-
-    public abstract void nextRandomMove();
 }

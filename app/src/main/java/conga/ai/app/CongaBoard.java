@@ -1,12 +1,20 @@
 package conga.ai.app;
 
 import conga.ai.api.Board;
+import conga.ai.api.Colour;
 import conga.ai.api.Copy;
+
+import static java.lang.System.out;
 
 /**
  *
  */
-public class CongaBoard extends Board<CongaTile, CongaPlayer> implements Copy<CongaBoard> {
+public class CongaBoard extends Board<CongaTile> implements Copy<CongaBoard> {
+    public static final String DIVIDER_TILE_LANE = "|";
+    public static final String UPPER_TILE_LANE = "-----------------------------";
+    public static final String EMPTY_CHAR = "";
+    public static final String NEW_LINE = "\n";
+
     public CongaBoard(int rows, int columns) {
         super(rows, columns);
     }
@@ -14,32 +22,43 @@ public class CongaBoard extends Board<CongaTile, CongaPlayer> implements Copy<Co
     @Override
     protected void initializeBoardProperties() {
         this.board = new CongaTile[this.rows][this.columns];
-        for(int row = 0; row < this.rows; row++) {
-            for(int column = 0; column < this.columns; column++) {
-                this.board[row][column] = new CongaTile(row, column);
+        for(int row = 0; row < rows; row++) {
+            for(int column = 0; column < columns; column++) {
+                board[row][column] = new CongaTile(row, column);
             }
         }
+        board[0][1].setTileColour(Colour.BLACK);
+        board[0][1].setStoneCount(2);
+        CongaTile congaTile = board[2][1];
+        congaTile.setStoneCount(2);
+        congaTile.setTileColour(Colour.WHITE);
     }
 
     @Override
-    protected boolean hasNextMove() {
-        return false;
+    public int evaluateHeuristics() {
+        return 0;
     }
 
     @Override
-    public void nextRandomMove() {
+    public void display() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(UPPER_TILE_LANE).append(NEW_LINE);
+        for(int row = 0; row < rows; row++) {
+            builder.append(DIVIDER_TILE_LANE);
+            for(int column = 0; column < columns; column++) {
+                builder.append(String.format("%1s%4s%2s",EMPTY_CHAR, this.board[row][column], DIVIDER_TILE_LANE));
+            }
+            builder.append(String.format("%s%s%s",NEW_LINE, UPPER_TILE_LANE, NEW_LINE));
+        }
+        out.println(builder.toString());
     }
 
     @Override
     public CongaBoard deepCopyOf() {
-        if(this == null) {
-            return null;
-        }
-
-        CongaBoard congaBoard = new CongaBoard(this.rows, this.columns);
-        for(int row = 0; row < this.rows; row++) {
-            for(int column = 0; column < this.columns; column++) {
-                congaBoard.board[row][column] = this.board[row][column].deepCopyOf();
+        CongaBoard congaBoard = new CongaBoard(rows, columns);
+        for(int row = 0; row < rows; row++) {
+            for(int column = 0; column < columns; column++) {
+                congaBoard.board[row][column] = board[row][column].deepCopyOf();
             }
         }
         return congaBoard;
