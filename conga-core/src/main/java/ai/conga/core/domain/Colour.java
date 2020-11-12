@@ -1,8 +1,5 @@
 package ai.conga.core.domain;
 
-/**
- *
- */
 public enum Colour {
     NONE("None"," ") {
         @Override

@@ -5,7 +5,7 @@ package ai.conga.core.domain;
  *
  * @param <T> type of Tile
  */
-public abstract class Board<T extends Tile> {
+public abstract class Board<T extends Tile<T>, B extends Board<T,B>> implements Copy<B> {
     protected int rows;
     protected int columns;
     protected T[][] board;
@@ -22,7 +22,7 @@ public abstract class Board<T extends Tile> {
 
     public abstract void display();
 
-    public abstract void updateBoard(T tileToUpdate);
+    public abstract <M extends Move<T,B,M>> void updateBoard(Move<T, B, M> playerMove);
 
     /**
      * Returns the deep copy of {@link T} if given row and column index are valid index and are matched
@@ -48,4 +48,7 @@ public abstract class Board<T extends Tile> {
     public void setColumns(int columns) {
         this.columns = columns;
     }
+
+    @Override
+    public abstract B deepCopyOf();
 }
