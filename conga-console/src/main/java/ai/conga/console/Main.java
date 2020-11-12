@@ -1,6 +1,7 @@
 package ai.conga.console;
 
 import ai.conga.core.domain.Colour;
+import ai.conga.core.domain.Move;
 import ai.conga.core.domain.MoveDirection;
 import ai.conga.core.util.Tuple;
 
@@ -19,14 +20,19 @@ public class Main {
         CongaTile tile2 =  board.getTile(0, 2);
         CongaTile tile3 =  board.getTile(0, 3);
         List<CongaPlayerMove> list = board.getAllPossibleMoves(Colour.BLACK);
-        /*CongaBoard congaBoard = list.get(0).getCurrentlyMovedBoard(board);
-        congaBoard.display();*/
-        //list = congaBoard.getAllPossibleMoves(Colour.BLACK);
+
         for(var move: list) {
             move.getCurrentlyMovedBoard(board).display();
-        };
+        }
+
+        var tile111 = board.getNextMove(tile1, MoveDirection.EAST);
+        var list1 = board.getAllMovedTiles(1, tile111);
+        CongaPlayerMove move = new CongaPlayerMove(tile1, list1);
+        //var n = move.getCurrentlyMovedBoard(board);
+        //n.display();
+
         /*Arrays.stream(MoveDirection.values()).forEach( direction -> {
-            Tuple<CongaTile, MoveDirection> tuple = board.getNextMove(tile, direction);
+            Tuple<CongaTile, MoveDirection> tuple = board.getNextMove(tile1, direction);
             if(tuple.getX() != INVALID_TILE && tuple.getY() != MoveDirection.INVALID) {
                 System.out.println(direction);
             }

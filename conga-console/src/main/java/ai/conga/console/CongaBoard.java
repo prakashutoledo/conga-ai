@@ -64,25 +64,22 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
 
     @Override
     public void updateBoard(CongaPlayerMove playerMove) {
-        if (playerMove != null) {
             for (CongaTile tile : playerMove.getToTiles()) {
                 board[tile.getRowIndex()][tile.getColumnIndex()].updateTile(tile);
             }
             Tuple<Integer, Integer> fromTileIndex = playerMove.getFromTile().getIndex();
-            CongaTile tile = board[fromTileIndex.getX()][fromTileIndex.getX()];
+            CongaTile tile = board[fromTileIndex.getX()][fromTileIndex.getY()];
             tile.emptyTile();
-        }
     }
 
     @Override
     public List<CongaPlayerMove> getAllPossibleMoves(final Colour playerColour) {
-
-        return Arrays.stream(board).flatMap(Arrays::stream).filter(tile -> tile.getTileColour() == playerColour)
-                .map(this::getAllPossibleMoves)
-                .flatMap(List::stream).collect(Collectors.toList());
+        var stream = Arrays.stream(board).flatMap(Arrays::stream).filter(tile -> tile.getTileColour() == playerColour)
+                .map(this::getAllPossibleMoves);
+        return stream.flatMap(List::stream).collect(Collectors.toList());
     }
 
-    private List<CongaPlayerMove> getAllPossibleMoves(final CongaTile tile) {
+    public List<CongaPlayerMove> getAllPossibleMoves(final CongaTile tile) {
        return Arrays.stream(MoveDirection.values()).map(direction -> getNextMove(tile, direction))
                 .filter(tuple -> tuple.getX() != INVALID_TILE && tuple.getY() != MoveDirection.INVALID)
                 .map(movedTuple -> new CongaPlayerMove(tile, this.getAllMovedTiles(tile.getStoneCount(), movedTuple))).collect(Collectors.toList());
@@ -152,11 +149,20 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
         return moveDirectionTuple;
     }
 
-    private List<Tuple<CongaTile, Integer>> getAllMovedTiles(int movedStones, Tuple<CongaTile, MoveDirection> movedTuple) {
+    public List<Tuple<CongaTile, Integer>> getAllMovedTiles(int movedStones, Tuple<CongaTile, MoveDirection> movedTuple) {
         List<Tuple<CongaTile, Integer>> allMovedList = new ArrayList<>();
         List<CongaTile> orderedTiles = new ArrayList<>(Arrays.asList(movedTuple.getX()));
 
         while((movedTuple = getNextMove(movedTuple.getX(), movedTuple.getY())).getY() != MoveDirection.INVALID) {
+            if(orderedTiles.size() == 1) {
+                if(movedStones - 1 < 0) {
+                    break;
+                }
+            } else {
+                if(movedStones - 2 < 0) {
+                    break;
+                }
+            }
             orderedTiles.add(movedTuple.getX());
         }
 
@@ -166,15 +172,26 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
                 break;
             case 2:
                 allMovedList.add(new Tuple<>(orderedTiles.get(0), 1));
-                allMovedList.add(new Tuple<>(orderedTiles.get(1), movedStones - 1));
+
+                if(movedStones - 1 > 0) {
+                    allMovedList.add(new Tuple<>(orderedTiles.get(1), movedStones - 1));
+                }
                 break;
             case 3:
                 allMovedList.add(new Tuple<>(orderedTiles.get(0), 1));
-                allMovedList.add(new Tuple<>(orderedTiles.get(1), 2));
-                allMovedList.add(new Tuple<>(orderedTiles.get(2), movedStones - 3));
-                break;
-        }
+                if(movedStones - 1 > 0) {
+                    if(movedStones - 2 > 0) {
+                        allMovedList.add(new Tuple<>(orderedTiles.get(1), 2));
+                    }
+                    else {
+                        allMovedList.add(new Tuple<>(orderedTiles.get(1), movedStones - 1));
+                    }
+                }
 
+                if(movedStones - 3 > 0) {
+                    allMovedList.add(new Tuple<>(orderedTiles.get(2), movedStones - 3));
+                }
+        }
         return allMovedList;
     }
 
