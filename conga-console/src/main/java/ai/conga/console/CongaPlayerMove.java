@@ -1,37 +1,37 @@
 package ai.conga.console;
 
-import ai.conga.core.util.Tuple;
-import ai.conga.core.domain.Colour;
 import ai.conga.core.domain.Move;
+import ai.conga.core.util.Tuple;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
+@SuppressWarnings("unchecked")
 public class CongaPlayerMove extends Move<CongaTile, CongaBoard, CongaPlayerMove> {
 
 
     private CongaPlayerMove() {
     }
 
-    public CongaPlayerMove(CongaTile fromTile, Tuple<CongaTile, Integer>... tileTuples) {
+    public CongaPlayerMove(CongaTile fromTile, List<Tuple<CongaTile, Integer>> tileTuples) {
         requireNonNull(fromTile, "From tile should not be null");
         requireNonNull(tileTuples, "Tuples of tile should not be null");
-
         this.checkAndUpdateTiles(fromTile, tileTuples);
     }
 
-    private void checkAndUpdateTiles(CongaTile fromTile, Tuple<CongaTile, Integer>... tileTuples) {
-        if (tileTuples.length < 1 || tileTuples.length > 3) {
+    private void checkAndUpdateTiles(CongaTile fromTile, List<Tuple<CongaTile, Integer>> tileTuples) {
+        if (tileTuples.size() < 1 || tileTuples.size() > 3) {
             throw new IllegalArgumentException("Not a valid tuple size. Size should be between 1 and 3 inclusive");
         }
 
         this.fromTile = fromTile;
-        this.toTiles = new CongaTile[tileTuples.length];
+        this.toTiles = new CongaTile[tileTuples.size()];
 
-        for (int index = 0; index < tileTuples.length; index++) {
-            CongaTile tile = tileTuples[index].getX();
-            Integer movedStones = tileTuples[index].getY();
+        for (int index = 0; index < tileTuples.size(); index++) {
+            CongaTile tile = tileTuples.get(index).getX();
+            Integer movedStones = tileTuples.get(index).getY();
             if (tile.getTileColour() == this.fromTile.getTileColour()) {
                 tile.setStoneCount(movedStones + tile.getStoneCount());
             } else {

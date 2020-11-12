@@ -24,7 +24,7 @@ public class RandomAgent extends Player<Colour, CongaBoard> implements Copy<Rand
 
     @Override
     public CongaBoard getBoard() {
-        return null;
+        return board;
     }
 
     @Override

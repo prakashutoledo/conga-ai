@@ -1,11 +1,12 @@
 package ai.conga.core.domain;
+import java.util.List;
 
 /**
  * Abstract board class which defines basic board information
  *
  * @param <T> type of Tile
  */
-public abstract class Board<T extends Tile<T>, B extends Board<T,B>> implements Copy<B> {
+public abstract class Board<T extends Tile<T>, B extends Board<T,B, M>, M extends Move<T,B,M>> implements Copy<B> {
     protected int rows;
     protected int columns;
     protected T[][] board;
@@ -22,7 +23,9 @@ public abstract class Board<T extends Tile<T>, B extends Board<T,B>> implements 
 
     public abstract void display();
 
-    public abstract <M extends Move<T,B,M>> void updateBoard(Move<T, B, M> playerMove);
+    public abstract void updateBoard(final M playerMove);
+
+    public abstract List<M> getAllPossibleMoves(final Colour playerColour);
 
     /**
      * Returns the deep copy of {@link T} if given row and column index are valid index and are matched
@@ -48,6 +51,7 @@ public abstract class Board<T extends Tile<T>, B extends Board<T,B>> implements 
     public void setColumns(int columns) {
         this.columns = columns;
     }
+
 
     @Override
     public abstract B deepCopyOf();
