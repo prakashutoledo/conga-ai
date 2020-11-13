@@ -47,7 +47,8 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
         board[0][1].setTileColour(Colour.WHITE);
         board[0][2].setStoneCount(1);
         board[0][2].setTileColour(Colour.WHITE);
-
+        //board[1][2].setStoneCount(2);
+        //board[1][2].setTileColour(Colour.WHITE);
 
         board[1][1].setStoneCount(10);
         board[1][1].setTileColour(Colour.BLACK);
@@ -77,38 +78,59 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
         int blackCount = 0;
         int whiteCount = 0;
 
-        //cout << "CLEARED ->" << endl;
-        //printBoard(board);
-        //printFlagBoard(blackFlagBoard);
-
-        for (int i=0; i<4; i++) {
-            for (int j=0; j<4; j++) {
-                if (board[i][j].getTileColour() == Colour.BLACK) {
-                    blackCount = getBlackCount(blackCount, i, j);
-                } else if (board[i][j].getTileColour() == Colour.WHITE) {
-                    whiteCount = getBlackCount(whiteCount, i, j);
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                if (board[row][column].getTileColour() == Colour.BLACK) {
+                    blackCount = calculateEntropy(blackCount, row, column);
+                } else if (board[row][column].getTileColour() == Colour.WHITE) {
+                    whiteCount = calculateEntropy(whiteCount, row, column);
                 }
             }
         }
+
         if (whiteCount == 0) {
             return Integer.MAX_VALUE;
         } else if (blackCount == 0) {
             return Integer.MIN_VALUE;
         } else {
-            return blackCount-whiteCount;
+            return blackCount - whiteCount;
         }
     }
 
-    private int getBlackCount(int blackCount, int rowIndex, int columnIndex) {
-        if (rowIndex-1 >= 0 && columnIndex-1 >= 0 && board[rowIndex-1][columnIndex-1].getTileColour() == Colour.NONE) blackCount++;
-        if (rowIndex-1 >= 0 && board[rowIndex-1][columnIndex].getTileColour() == Colour.NONE) blackCount++;
-        if (rowIndex-1 >= 0 && columnIndex+1 < 4 && board[rowIndex-1][columnIndex+1].getTileColour() == Colour.NONE) blackCount++;
-        if (columnIndex-1 >= 0 && board[rowIndex][columnIndex-1].getTileColour() == Colour.NONE) blackCount++;
-        if (columnIndex+1 < 4 && board[rowIndex][columnIndex+1].getTileColour() == Colour.NONE) blackCount++;
-        if (rowIndex+1 < 4 && columnIndex-1 >= 0 && board[rowIndex+1][columnIndex-1].getTileColour() == Colour.NONE) blackCount++;
-        if (rowIndex+1 < 4 && board[rowIndex+1][columnIndex].getTileColour() == Colour.NONE) blackCount++;
-        if (rowIndex+1 < 4 && columnIndex+1 < 4 && board[rowIndex+1][columnIndex+1].getTileColour() == Colour.NONE) blackCount++;
-        return blackCount;
+    private int calculateEntropy(int count, int rowIndex, int columnIndex) {
+        if (rowIndex-1 >= 0 && columnIndex-1 >= 0 && board[rowIndex-1][columnIndex-1].getTileColour() == Colour.NONE) {
+            ++count;
+        }
+
+        if (rowIndex-1 >= 0 && board[rowIndex-1][columnIndex].getTileColour() == Colour.NONE) {
+            ++count;
+        }
+
+        if (rowIndex-1 >= 0 && columnIndex+1 < columns && board[rowIndex-1][columnIndex+1].getTileColour() == Colour.NONE) {
+            ++count;
+        }
+
+        if (columnIndex-1 >= 0 && board[rowIndex][columnIndex-1].getTileColour() == Colour.NONE) {
+            ++count;
+        }
+
+        if (columnIndex+1 < rows && board[rowIndex][columnIndex+1].getTileColour() == Colour.NONE) {
+            ++count;
+        }
+
+        if (rowIndex+1 < rows && columnIndex-1 >= 0 && board[rowIndex+1][columnIndex-1].getTileColour() == Colour.NONE) {
+            ++count;
+        }
+
+        if (rowIndex+1 < rows && board[rowIndex+1][columnIndex].getTileColour() == Colour.NONE) {
+            ++count;
+        }
+
+        if (rowIndex+1 < rows && columnIndex+1 < columns && board[rowIndex+1][columnIndex+1].getTileColour() == Colour.NONE) {
+            ++count;
+        }
+
+        return count;
     }
 
     @Override
@@ -126,7 +148,7 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
     }
 
     @Override
-    public void updateBoard(CongaPlayerMove playerMove) {
+    public void updateBoard(@NotNull CongaPlayerMove playerMove) {
             for (CongaTile tile : playerMove.getToTiles()) {
                 board[tile.getRowIndex()][tile.getColumnIndex()].updateTile(tile);
             }
@@ -147,7 +169,7 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
                 .map(movedTuple -> new CongaPlayerMove(tile, this.getAllMovedTiles(tile.getStoneCount(), movedTuple, tile.getTileColour()))).collect(Collectors.toList());
     }
     @NotNull
-    public Tuple<CongaTile, MoveDirection> getNextMove(final CongaTile tile, MoveDirection direction, Colour colour) {
+    public Tuple<CongaTile, MoveDirection> getNextMove(@NotNull  CongaTile tile, MoveDirection direction, @NotNull Colour colour) {
         Tuple<CongaTile, MoveDirection> moveDirectionTuple =  new Tuple<>(INVALID_TILE, MoveDirection.INVALID);
         switch (direction) {
             case EAST:
@@ -207,6 +229,7 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
                     moveDirectionTuple = new Tuple<>(getTile(tile.getRowIndex() + 1,tile.getColumnIndex() + 1), direction);
                 }
                 break;
+            default:
         }
         return moveDirectionTuple;
     }

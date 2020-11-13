@@ -2,41 +2,30 @@ package ai.conga.console.agent;
 
 import ai.conga.console.CongaBoard;
 import ai.conga.console.CongaPlayerMove;
+import ai.conga.core.algorithm.MiniMax;
 import ai.conga.core.domain.Colour;
-import ai.conga.core.domain.Copy;
 import ai.conga.core.domain.Player;
+import ai.conga.core.util.Tuple;
 
 import java.util.ArrayDeque;
 
-public class MiniMaxAgent extends Player<Colour, CongaBoard, CongaPlayerMove,MiniMaxAgent> {
-    private Colour playerColour;
-    private CongaBoard board;
+public class MiniMaxAgent extends Player<CongaBoard, CongaPlayerMove, MiniMaxAgent> {
+    MiniMax<MiniMaxAgent, CongaPlayerMove> miniMax;
 
-    private MiniMaxAgent() {}
+    private MiniMaxAgent() {
+        super();
+    }
 
     public MiniMaxAgent(Colour playerColour, CongaBoard board) {
-        this.playerColour = playerColour;
-        this.board = board;
+        super(playerColour, board);
         this.pastMove = new ArrayDeque<>();
-    }
-
-    @Override
-    public Colour getPlayerColour() {
-        return playerColour;
-    }
-
-    @Override
-    public CongaBoard getBoard() {
-        return board;
-    }
-
-    @Override
-    public boolean isWinner() {
-        return false;
+        this.miniMax = new MiniMax<>(this);
     }
 
     @Override
     public void makeMove() {
+        Tuple<CongaPlayerMove, Integer> moveTuple = miniMax.bestMove();
+        board.updateBoard(moveTuple.getX());
     }
 
     @Override
