@@ -6,7 +6,7 @@ import java.util.List;
  *
  * @param <T> type of Tile
  */
-public abstract class Board<T extends Tile<T>, B extends Board<T,B, M>, M extends Move<T,B,M>> implements Copy<B> {
+public abstract class Board<T extends Tile<T>, B extends Board<T,B,M>, M extends Move<T,B,M>> implements Copy<B> {
     protected int rows;
     protected int columns;
     protected T[][] board;

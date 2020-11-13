@@ -2,14 +2,11 @@ package ai.conga.console;
 
 import ai.conga.core.domain.Board;
 import ai.conga.core.domain.Colour;
-import ai.conga.core.domain.Move;
 import ai.conga.core.domain.MoveDirection;
 import ai.conga.core.util.Tuple;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ai.conga.console.util.CongaConsoleGlobals.*;
@@ -35,8 +32,10 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
         }
         board[0][1].setStoneCount(1);
         board[0][1].setTileColour(Colour.BLACK);
-        board[0][2].setStoneCount(2);
-        board[0][2].setTileColour(Colour.BLACK);
+        board[1][1].setStoneCount(1);
+        board[1][1].setTileColour(Colour.BLACK);
+        board[2][0].setStoneCount(1);
+        board[2][0].setTileColour(Colour.BLACK);
         board[0][3].setStoneCount(7);
         board[0][3].setTileColour(Colour.BLACK);
         board[3][3].setStoneCount(10);
@@ -76,21 +75,22 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
     public List<CongaPlayerMove> getAllPossibleMoves(final Colour playerColour) {
         var stream = Arrays.stream(board).flatMap(Arrays::stream).filter(tile -> tile.getTileColour() == playerColour)
                 .map(this::getAllPossibleMoves);
+
         return stream.flatMap(List::stream).collect(Collectors.toList());
     }
 
     public List<CongaPlayerMove> getAllPossibleMoves(final CongaTile tile) {
-       return Arrays.stream(MoveDirection.values()).map(direction -> getNextMove(tile, direction))
+       return Arrays.stream(MoveDirection.values()).map(direction -> getNextMove(tile, direction, tile.getTileColour()))
                 .filter(tuple -> tuple.getX() != INVALID_TILE && tuple.getY() != MoveDirection.INVALID)
-                .map(movedTuple -> new CongaPlayerMove(tile, this.getAllMovedTiles(tile.getStoneCount(), movedTuple))).collect(Collectors.toList());
+                .map(movedTuple -> new CongaPlayerMove(tile, this.getAllMovedTiles(tile.getStoneCount(), movedTuple, tile.getTileColour()))).collect(Collectors.toList());
     }
-
-    public Tuple<CongaTile, MoveDirection> getNextMove(final CongaTile tile, MoveDirection direction) {
+    @NotNull
+    public Tuple<CongaTile, MoveDirection> getNextMove(final CongaTile tile, MoveDirection direction, Colour colour) {
         Tuple<CongaTile, MoveDirection> moveDirectionTuple =  new Tuple<>(INVALID_TILE, MoveDirection.INVALID);
         switch (direction) {
             case EAST:
                 if(tile.getColumnIndex() != columns - 1 &&
-                        (board[tile.getRowIndex()][tile.getColumnIndex() + 1].getTileColour() == tile.getTileColour() ||
+                        (board[tile.getRowIndex()][tile.getColumnIndex() + 1].getTileColour() == colour ||
                                 board[tile.getRowIndex()][tile.getColumnIndex() + 1].getTileColour() == Colour.NONE)) {
                     moveDirectionTuple = new Tuple<>(getTile(tile.getRowIndex(),tile.getColumnIndex() + 1), direction);
                 }
@@ -98,49 +98,49 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
 
             case NORTH_EAST:
                 if ((tile.getRowIndex() != 0 && tile.getColumnIndex() != rows - 1) &&
-                        (board[tile.getRowIndex() - 1][tile.getColumnIndex() + 1].getTileColour() == tile.getTileColour() ||
+                        (board[tile.getRowIndex() - 1][tile.getColumnIndex() + 1].getTileColour() == colour ||
                                 board[tile.getRowIndex() - 1][tile.getColumnIndex() + 1].getTileColour() == Colour.NONE)) {
                     moveDirectionTuple = new Tuple<>(getTile(tile.getRowIndex() - 1, tile.getColumnIndex() + 1), direction);
                 }
                 break;
             case NORTH:
                 if (tile.getRowIndex() != 0 &&
-                        (board[tile.getRowIndex() - 1][tile.getColumnIndex()].getTileColour() == tile.getTileColour() ||
+                        (board[tile.getRowIndex() - 1][tile.getColumnIndex()].getTileColour() == colour ||
                                 board[tile.getRowIndex() - 1][tile.getColumnIndex()].getTileColour() == Colour.NONE)) {
                     moveDirectionTuple = new Tuple<>(getTile(tile.getRowIndex() - 1, tile.getColumnIndex()), direction);
                 }
                 break;
             case NORTH_WEST:
                 if ((tile.getRowIndex() != 0 && tile.getColumnIndex() != 0) &&
-                        (board[tile.getRowIndex() - 1][tile.getColumnIndex() - 1].getTileColour() == tile.getTileColour() ||
+                        (board[tile.getRowIndex() - 1][tile.getColumnIndex() - 1].getTileColour() == colour ||
                                 board[tile.getRowIndex() - 1][tile.getColumnIndex() - 1].getTileColour() == Colour.NONE)) {
                     moveDirectionTuple = new Tuple<>(getTile(tile.getRowIndex() - 1,tile.getColumnIndex() - 1), direction);
                 }
                 break;
             case WEST:
                 if (tile.getColumnIndex() != 0 &&
-                        (board[tile.getRowIndex()][tile.getColumnIndex() - 1].getTileColour() == tile.getTileColour() ||
+                        (board[tile.getRowIndex()][tile.getColumnIndex() - 1].getTileColour() == colour ||
                                 board[tile.getRowIndex()][tile.getColumnIndex() - 1].getTileColour() == Colour.NONE)) {
                     moveDirectionTuple =  new Tuple<>(getTile(tile.getRowIndex(),tile.getColumnIndex() - 1), direction);
                 }
                 break;
             case SOUTH:
                 if (tile.getRowIndex() != rows - 1 &&
-                        (board[tile.getRowIndex() + 1][tile.getColumnIndex()].getTileColour() == tile.getTileColour() ||
+                        (board[tile.getRowIndex() + 1][tile.getColumnIndex()].getTileColour() == colour ||
                                 board[tile.getRowIndex() + 1][tile.getColumnIndex()].getTileColour() == Colour.NONE)) {
                     moveDirectionTuple = new Tuple<>(getTile(tile.getRowIndex() + 1,tile.getColumnIndex()), direction);
                 }
                 break;
             case SOUTH_WEST:
                 if ((tile.getRowIndex() != rows - 1 && tile.getColumnIndex() != 0) &&
-                        (board[tile.getRowIndex() + 1][tile.getColumnIndex() - 1].getTileColour() == tile.getTileColour() ||
+                        (board[tile.getRowIndex() + 1][tile.getColumnIndex() - 1].getTileColour() == colour ||
                                 board[tile.getRowIndex() + 1][tile.getColumnIndex() - 1].getTileColour() == Colour.NONE)) {
                     moveDirectionTuple = new Tuple<>(getTile(tile.getRowIndex() + 1,tile.getColumnIndex() - 1), direction);
                 }
                 break;
             case SOUTH_EAST:
                 if ((tile.getRowIndex() != rows - 1 && tile.getColumnIndex() != columns- 1) &&
-                        (board[tile.getRowIndex() + 1][tile.getColumnIndex() + 1].getTileColour() == tile.getTileColour() ||
+                        (board[tile.getRowIndex() + 1][tile.getColumnIndex() + 1].getTileColour() == colour ||
                                 board[tile.getRowIndex() + 1][tile.getColumnIndex() + 1].getTileColour() == Colour.NONE)) {
                     moveDirectionTuple = new Tuple<>(getTile(tile.getRowIndex() + 1,tile.getColumnIndex() + 1), direction);
                 }
@@ -149,17 +149,17 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
         return moveDirectionTuple;
     }
 
-    public List<Tuple<CongaTile, Integer>> getAllMovedTiles(int movedStones, Tuple<CongaTile, MoveDirection> movedTuple) {
+    public List<Tuple<CongaTile, Integer>> getAllMovedTiles(int movedStones, Tuple<CongaTile, MoveDirection> movedTuple, Colour colour) {
         List<Tuple<CongaTile, Integer>> allMovedList = new ArrayList<>();
-        List<CongaTile> orderedTiles = new ArrayList<>(Arrays.asList(movedTuple.getX()));
+        List<CongaTile> orderedTiles = new ArrayList<>(Collections.singletonList(movedTuple.getX()));
 
-        while((movedTuple = getNextMove(movedTuple.getX(), movedTuple.getY())).getY() != MoveDirection.INVALID) {
+        while((movedTuple = getNextMove(movedTuple.getX(), movedTuple.getY(), colour)).getY() != MoveDirection.INVALID) {
             if(orderedTiles.size() == 1) {
-                if(movedStones - 1 < 0) {
+                if(movedStones - 1 <= 0) {
                     break;
                 }
             } else {
-                if(movedStones - 2 < 0) {
+                if(movedStones - 2 <= 0 || movedStones - 3 == 0) {
                     break;
                 }
             }
@@ -171,26 +171,13 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
                 allMovedList.add(new Tuple<>(orderedTiles.get(0), movedStones));
                 break;
             case 2:
-                allMovedList.add(new Tuple<>(orderedTiles.get(0), 1));
-
-                if(movedStones - 1 > 0) {
-                    allMovedList.add(new Tuple<>(orderedTiles.get(1), movedStones - 1));
-                }
+                allMovedList.addAll(Arrays.asList(new Tuple<>(orderedTiles.get(0), 1),
+                        new Tuple<>(orderedTiles.get(1), movedStones - 1)));
                 break;
             case 3:
-                allMovedList.add(new Tuple<>(orderedTiles.get(0), 1));
-                if(movedStones - 1 > 0) {
-                    if(movedStones - 2 > 0) {
-                        allMovedList.add(new Tuple<>(orderedTiles.get(1), 2));
-                    }
-                    else {
-                        allMovedList.add(new Tuple<>(orderedTiles.get(1), movedStones - 1));
-                    }
-                }
+                allMovedList.addAll(Arrays.asList(new Tuple<>(orderedTiles.get(0), 1),
+                        new Tuple<>(orderedTiles.get(1), 2), new Tuple<>(orderedTiles.get(2), movedStones - 3)));
 
-                if(movedStones - 3 > 0) {
-                    allMovedList.add(new Tuple<>(orderedTiles.get(2), movedStones - 3));
-                }
         }
         return allMovedList;
     }
