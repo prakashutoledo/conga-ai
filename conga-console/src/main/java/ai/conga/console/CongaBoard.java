@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import static ai.conga.console.util.CongaConsoleGlobals.*;
 import static java.lang.System.out;
 
-public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
+public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
 
     public CongaBoard() {
         this(CONGA_BOARD_ROW_SIZE, CONGA_BOARD_COLUMN_SIZE);
@@ -47,8 +47,7 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
         board[0][1].setTileColour(Colour.WHITE);
         board[0][2].setStoneCount(1);
         board[0][2].setTileColour(Colour.WHITE);
-        board[1][2].setStoneCount(2);
-        board[1][2].setTileColour(Colour.WHITE);
+
 
         board[1][1].setStoneCount(10);
         board[1][1].setTileColour(Colour.BLACK);
@@ -75,7 +74,41 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
 
     @Override
     public int evaluateHeuristics() {
-        return 0;
+        int blackCount = 0;
+        int whiteCount = 0;
+
+        //cout << "CLEARED ->" << endl;
+        //printBoard(board);
+        //printFlagBoard(blackFlagBoard);
+
+        for (int i=0; i<4; i++) {
+            for (int j=0; j<4; j++) {
+                if (board[i][j].getTileColour() == Colour.BLACK) {
+                    blackCount = getBlackCount(blackCount, i, j);
+                } else if (board[i][j].getTileColour() == Colour.WHITE) {
+                    whiteCount = getBlackCount(whiteCount, i, j);
+                }
+            }
+        }
+        if (whiteCount == 0) {
+            return Integer.MAX_VALUE;
+        } else if (blackCount == 0) {
+            return Integer.MIN_VALUE;
+        } else {
+            return blackCount-whiteCount;
+        }
+    }
+
+    private int getBlackCount(int blackCount, int rowIndex, int columnIndex) {
+        if (rowIndex-1 >= 0 && columnIndex-1 >= 0 && board[rowIndex-1][columnIndex-1].getTileColour() == Colour.NONE) blackCount++;
+        if (rowIndex-1 >= 0 && board[rowIndex-1][columnIndex].getTileColour() == Colour.NONE) blackCount++;
+        if (rowIndex-1 >= 0 && columnIndex+1 < 4 && board[rowIndex-1][columnIndex+1].getTileColour() == Colour.NONE) blackCount++;
+        if (columnIndex-1 >= 0 && board[rowIndex][columnIndex-1].getTileColour() == Colour.NONE) blackCount++;
+        if (columnIndex+1 < 4 && board[rowIndex][columnIndex+1].getTileColour() == Colour.NONE) blackCount++;
+        if (rowIndex+1 < 4 && columnIndex-1 >= 0 && board[rowIndex+1][columnIndex-1].getTileColour() == Colour.NONE) blackCount++;
+        if (rowIndex+1 < 4 && board[rowIndex+1][columnIndex].getTileColour() == Colour.NONE) blackCount++;
+        if (rowIndex+1 < 4 && columnIndex+1 < 4 && board[rowIndex+1][columnIndex+1].getTileColour() == Colour.NONE) blackCount++;
+        return blackCount;
     }
 
     @Override

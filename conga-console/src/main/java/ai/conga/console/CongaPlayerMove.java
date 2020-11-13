@@ -10,8 +10,6 @@ import static java.util.Objects.requireNonNull;
 
 @SuppressWarnings("unchecked")
 public class CongaPlayerMove extends Move<CongaTile, CongaBoard, CongaPlayerMove> {
-
-
     private CongaPlayerMove() {
     }
 
@@ -32,11 +30,11 @@ public class CongaPlayerMove extends Move<CongaTile, CongaBoard, CongaPlayerMove
         for (int index = 0; index < tileTuples.size(); index++) {
             CongaTile tile = tileTuples.get(index).getX();
             Integer movedStones = tileTuples.get(index).getY();
-            if (tile.getTileColour() == this.fromTile.getTileColour()) {
+            if (tile.getTileColour() == fromTile.getTileColour()) {
                 tile.setStoneCount(movedStones + tile.getStoneCount());
             } else {
                 tile.setStoneCount(movedStones);
-                tile.setTileColour(this.fromTile.getTileColour());
+                tile.setTileColour(fromTile.getTileColour());
             }
             toTiles[index] = tile;
         }

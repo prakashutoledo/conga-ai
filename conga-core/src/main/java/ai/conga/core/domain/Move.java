@@ -8,7 +8,7 @@ import ai.conga.core.util.Tuple;
  * @param <B>
  * @param <M>
  */
-public abstract class Move<T extends Tile<T>, B extends Board<T,B, M>, M extends Move<T,B,M>> implements Copy<M> {
+public abstract class Move<T extends Tile<T>, B extends Board<T,M,B>, M extends Move<T,B,M>> implements Copy<M> {
     protected T[] toTiles;
     protected T fromTile;
 

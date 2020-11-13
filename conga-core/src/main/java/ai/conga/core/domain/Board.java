@@ -1,4 +1,6 @@
 package ai.conga.core.domain;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 
 /**
@@ -6,7 +8,7 @@ import java.util.List;
  *
  * @param <T> type of Tile
  */
-public abstract class Board<T extends Tile<T>, B extends Board<T,B,M>, M extends Move<T,B,M>> implements Copy<B> {
+public abstract class Board<T extends Tile<T>, M extends Move<T,B,M>, B extends Board<T,M,B>> implements Copy<B> {
     protected int rows;
     protected int columns;
     protected T[][] board;
