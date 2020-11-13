@@ -24,13 +24,13 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
 
     @Override
     protected void initializeBoardProperties() {
-        this.board = new CongaTile[this.rows][this.columns];
+        this.board = new CongaTile[rows][columns];
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
                 board[row][column] = new CongaTile(row, column);
             }
         }
-        board[0][1].setStoneCount(1);
+        /*board[0][10].setStoneCount(1);
         board[0][1].setTileColour(Colour.BLACK);
         board[1][1].setStoneCount(1);
         board[1][1].setTileColour(Colour.BLACK);
@@ -39,7 +39,38 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
         board[0][3].setStoneCount(7);
         board[0][3].setTileColour(Colour.BLACK);
         board[3][3].setStoneCount(10);
-        board[3][3].setTileColour(Colour.WHITE);
+        board[3][3].setTileColour(Colour.WHITE);*/
+
+        board[0][0].setStoneCount(1);
+        board[0][0].setTileColour(Colour.WHITE);
+        board[0][1].setStoneCount(1);
+        board[0][1].setTileColour(Colour.WHITE);
+        board[0][2].setStoneCount(1);
+        board[0][2].setTileColour(Colour.WHITE);
+        board[1][2].setStoneCount(2);
+        board[1][2].setTileColour(Colour.WHITE);
+
+        board[1][1].setStoneCount(10);
+        board[1][1].setTileColour(Colour.BLACK);
+
+        board[2][2].setStoneCount(1);
+        board[2][2].setTileColour(Colour.WHITE);
+        board[2][1].setStoneCount(1);
+        board[2][1].setTileColour(Colour.WHITE);
+        board[2][0].setStoneCount(1);
+        board[2][0].setTileColour(Colour.WHITE);
+        board[1][0].setStoneCount(2);
+        board[1][0].setTileColour(Colour.WHITE);
+
+        /*board[3][3].setStoneCount(5);
+        board[3][3].setTileColour(Colour.BLACK);
+        board[3][2].setStoneCount(1);
+        board[3][2].setTileColour(Colour.WHITE);
+        board[2][2].setStoneCount(2);
+        board[2][2].setTileColour(Colour.WHITE);
+        board[2][3].setStoneCount(3);
+        board[2][3].setTileColour(Colour.WHITE);*/
+
     }
 
     @Override
@@ -73,10 +104,8 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
 
     @Override
     public List<CongaPlayerMove> getAllPossibleMoves(final Colour playerColour) {
-        var stream = Arrays.stream(board).flatMap(Arrays::stream).filter(tile -> tile.getTileColour() == playerColour)
-                .map(this::getAllPossibleMoves);
-
-        return stream.flatMap(List::stream).collect(Collectors.toList());
+        return Arrays.stream(board).flatMap(Arrays::stream).filter(tile -> tile.getTileColour() == playerColour)
+                .map(this::getAllPossibleMoves).flatMap(List::stream).collect(Collectors.toList());
     }
 
     public List<CongaPlayerMove> getAllPossibleMoves(final CongaTile tile) {
@@ -155,11 +184,11 @@ public class CongaBoard extends Board<CongaTile, CongaBoard, CongaPlayerMove> {
 
         while((movedTuple = getNextMove(movedTuple.getX(), movedTuple.getY(), colour)).getY() != MoveDirection.INVALID) {
             if(orderedTiles.size() == 1) {
-                if(movedStones - 1 <= 0) {
+                if(movedStones <= 1) {
                     break;
                 }
             } else {
-                if(movedStones - 2 <= 0 || movedStones - 3 == 0) {
+                if(movedStones <= 3) {
                     break;
                 }
             }
