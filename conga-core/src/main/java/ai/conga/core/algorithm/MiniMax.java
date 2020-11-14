@@ -30,24 +30,20 @@ public class MiniMax<P extends Player, M extends Move> {
     }
 
     private Tuple<M, Integer> minimax(int depth, @NotNull Colour colour) {
-        //System.out.println(depth + " " + colour);
-        M bestMove = null;
         int bestScore = player.getPlayerColour() == colour ? Integer.MIN_VALUE : Integer.MAX_VALUE;
         List<M> availableMoves = player.getAllPossibleMoves();
+        M bestMove = RandomUtil.randomElement(availableMoves).orElse(null);
         int currentScore;
 
         if(availableMoves.isEmpty() || depth == 0) {
-            //System.out.println("True");
             bestScore = player.getBoard().evaluateHeuristics();
             return new Tuple<>(bestMove, bestScore);
         }
 
         for(M move : availableMoves) {
             player.updateMove(move);
-            //player.getBoard().display();
             if(player.getPlayerColour() == colour) {
                 currentScore = minimax(depth - 1, colour.nextTurn()).getY();
-
                 if(currentScore > bestScore) {
                     bestScore =  currentScore;
                     bestMove = move;

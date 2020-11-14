@@ -37,15 +37,8 @@ public class CongaGame extends Game<CongaBoard> {
                     System.out.println(String.format("Random Agent(%d) is winner!!!", Colour.BLACK));
                     System.out.println("You Rock!!");
                 }
-
-
                 break;
             }
-            /*try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
             currentPlayer = currentPlayer == whitePlayer ? blackPlayer : whitePlayer;
         }
     }
