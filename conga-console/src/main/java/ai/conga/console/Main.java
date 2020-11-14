@@ -2,6 +2,7 @@ package ai.conga.console;
 
 import ai.conga.console.agent.MiniMaxAgent;
 import ai.conga.console.game.CongaBoard;
+import ai.conga.core.algorithm.MiniMax;
 import ai.conga.core.domain.Colour;
 
 import java.util.Random;

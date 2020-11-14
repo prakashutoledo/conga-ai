@@ -1,7 +1,9 @@
 package ai.conga.core.domain;
 
+import ai.conga.core.algorithm.RandomUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.function.Supplier;
@@ -23,7 +25,14 @@ public abstract class Player<B extends Board, M extends Move, P extends Player<B
     }
 
     public abstract void makeMove();
-    public abstract void undoMove();
+
+    public void undoMove() {
+        if(RandomUtil.isEmptyCollection(pastMove)) {
+            return;
+        }
+        M lastMove = pastMove.pop();
+        board.revertBoard(lastMove);
+    }
 
     public Colour getPlayerColour() {
         return playerColour;
@@ -44,7 +53,10 @@ public abstract class Player<B extends Board, M extends Move, P extends Player<B
      */
     @SuppressWarnings("unchecked")
     public void updateMove(@NotNull M move) {
-        pastMove.push(move);
+        if(!RandomUtil.isNullCollection(pastMove)) {
+            pastMove.push(move);
+        }
+
         board.updateBoard(move, false);
     }
 

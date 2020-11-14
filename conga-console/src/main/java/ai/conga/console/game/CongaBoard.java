@@ -40,7 +40,7 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
 
 
 
-        /*board[0][10].setStoneCount(1);
+        /*board[0][1].setStoneCount(1);
         board[0][1].setTileColour(Colour.BLACK);
         board[1][1].setStoneCount(1);
         board[1][1].setTileColour(Colour.BLACK);
@@ -48,8 +48,8 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
         board[2][0].setTileColour(Colour.BLACK);
         board[0][3].setStoneCount(7);
         board[0][3].setTileColour(Colour.BLACK);
-        board[3][3].setStoneCount(10);
-        board[3][3].setTileColour(Colour.WHITE);*/
+        board[0][0].setStoneCount(10);
+        board[0][0].setTileColour(Colour.WHITE);*/
 
         /*board[0][0].setStoneCount(1);
         board[0][0].setTileColour(Colour.WHITE);
@@ -145,7 +145,7 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
 
     @Override
     public void display() {
-        StringBuilder builder = new StringBuilder();
+        /*StringBuilder builder = new StringBuilder();
         builder.append(UPPER_TILE_LANE).append(NEW_LINE);
         for (int row = 0; row < rows; row++) {
             builder.append(DIVIDER_TILE_LANE);
@@ -153,8 +153,8 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
                 builder.append(String.format("%1s%4s%2s", EMPTY_CHAR, board[row][column], DIVIDER_TILE_LANE));
             }
             builder.append(String.format("%s%s%s", NEW_LINE, UPPER_TILE_LANE, NEW_LINE));
-        }
-        out.println(builder.toString());
+        }*/
+        out.println(toString());
     }
 
     @Override
@@ -331,5 +331,19 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
             }
         }
         return congaBoard;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(UPPER_TILE_LANE).append(NEW_LINE);
+        for (int row = 0; row < rows; row++) {
+            builder.append(DIVIDER_TILE_LANE);
+            for (int column = 0; column < columns; column++) {
+                builder.append(String.format("%1s%4s%2s", EMPTY_CHAR, board[row][column], DIVIDER_TILE_LANE));
+            }
+            builder.append(String.format("%s%s%s", NEW_LINE, UPPER_TILE_LANE, NEW_LINE));
+        }
+        return builder.toString();
     }
 }

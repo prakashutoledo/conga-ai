@@ -1,5 +1,6 @@
 package ai.conga.console;
 
+import ai.conga.console.agent.AlphaBetaAgent;
 import ai.conga.console.agent.MiniMaxAgent;
 import ai.conga.console.agent.RandomAgent;
 import ai.conga.console.game.CongaBoard;
@@ -14,6 +15,15 @@ public class CongaConsoleApplication {
         CongaBoard board = new CongaBoard();
         new CongaGame(board).start();
         /*board.display();
+
+        MiniMaxAgent miniMax = new MiniMaxAgent(Colour.BLACK, board.deepCopyOf());
+        AlphaBetaAgent alphaBetaAgent = new AlphaBetaAgent(Colour.BLACK, board.deepCopyOf());
+        miniMax.makeMove();
+        miniMax.getBoard().display();
+
+        alphaBetaAgent.makeMove();
+        alphaBetaAgent.getBoard().display();*/
+        /*board.display();
         System.out.println("Start Game------------------------");
         MiniMaxAgent agent1 = new MiniMaxAgent(Colour.BLACK, board);
         MiniMaxAgent agent2 = new MiniMaxAgent(Colour.WHITE, board);
@@ -23,16 +33,6 @@ public class CongaConsoleApplication {
         randomAgent.makeMove();
         board.display();
         randomAgent.makeMove();
-        board.display();
-
-
-        //agent1.makeMove();
-        board.display();
-        agent1.getBoard().display();
-        agent2.getBoard().display();
-
-        Random random =  new Random();
-        System.out.println(random.nextInt(10));
-        System.out.println(random.nextInt(8));*/
+        board.display();*/
     }
 }

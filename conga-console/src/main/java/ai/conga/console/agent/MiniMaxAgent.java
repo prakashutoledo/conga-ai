@@ -6,11 +6,16 @@ import ai.conga.core.algorithm.MiniMax;
 import ai.conga.core.domain.Colour;
 import ai.conga.core.domain.Player;
 import ai.conga.core.util.Tuple;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 import java.util.ArrayDeque;
+import java.util.concurrent.ExecutionException;
 
 public class MiniMaxAgent extends Player<CongaBoard, CongaPlayerMove, MiniMaxAgent> {
     MiniMax<MiniMaxAgent, CongaPlayerMove> miniMax;
+    LoadingCache<String, Tuple<CongaPlayerMove, Integer>> usedMoveCache;
 
     private MiniMaxAgent() {
         super();
@@ -20,18 +25,23 @@ public class MiniMaxAgent extends Player<CongaBoard, CongaPlayerMove, MiniMaxAge
         super(playerColour, board);
         this.pastMove = new ArrayDeque<>();
         this.miniMax = new MiniMax<>(this);
+        this.usedMoveCache = CacheBuilder.newBuilder().build(new CacheLoader<String, Tuple<CongaPlayerMove, Integer>>() {
+            @Override
+            public Tuple<CongaPlayerMove, Integer> load(String key) throws Exception {
+                return miniMax.bestMove();
+            }
+        });
     }
 
     @Override
     public void makeMove() {
-        Tuple<CongaPlayerMove, Integer> moveTuple = miniMax.bestMove();
+        Tuple<CongaPlayerMove, Integer> moveTuple = null;
+        try {
+            moveTuple = usedMoveCache.get(board.toString());
+        } catch (ExecutionException e) {
+            moveTuple = miniMax.bestMove();
+        }
         board.updateBoard(moveTuple.getX(), true);
-    }
-
-    @Override
-    public void undoMove() {
-        CongaPlayerMove lastMove = pastMove.pop();
-        board.revertBoard(lastMove);
     }
 
     @Override

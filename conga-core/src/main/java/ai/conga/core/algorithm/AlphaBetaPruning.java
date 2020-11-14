@@ -10,28 +10,31 @@ import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class AlphaBetaPruning <P extends Player, M extends Move> {
+    private static final int MAX_MINIMAX_TREE_DEPTH = 3;
     private final P player;
     private int maxTreeDepth;
+
+    public AlphaBetaPruning(P player) {
+        this(player, MAX_MINIMAX_TREE_DEPTH);
+    }
 
     public AlphaBetaPruning(@NotNull P player, int maxTreeDepth) {
         this.player = player;
         this.maxTreeDepth = maxTreeDepth;
     }
-    public AlphaBetaPruning(@NotNull P player) {
-        this.player = player;
-    }
 
-    public Tuple<M, Integer> makeMove() {
+    public Tuple<M, Integer> bestMove() {
         return alphaBetaPruning(maxTreeDepth, player.getPlayerColour(), Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
     private Tuple<M, Integer> alphaBetaPruning(int depth, Colour colour, int alpha, int beta) {
         int currentScore;
         List<M> availableMoves = player.getAllPossibleMoves();
-        M bestMove = RandomUtil.randomElement(availableMoves).orElse(null);
+        M bestPossibleMove = RandomUtil.randomElement(availableMoves).orElse(null);
+
         if(availableMoves.isEmpty() || depth == 0) {
             currentScore = player.getBoard().evaluateHeuristics();
-            return new Tuple<>(bestMove, currentScore);
+            return new Tuple<>(bestPossibleMove, currentScore);
         }
 
         for(M move : availableMoves) {
@@ -40,23 +43,21 @@ public class AlphaBetaPruning <P extends Player, M extends Move> {
                 currentScore = alphaBetaPruning(depth - 1, colour.nextTurn(), alpha, beta).getY();
                 if(currentScore > alpha) {
                     alpha = currentScore;
-                    bestMove = move;
+                    bestPossibleMove = move;
                 }
             }
             else {
                 currentScore = alphaBetaPruning(depth - 1, colour.nextTurn(), alpha, beta).getY();
                 if(currentScore < beta) {
                     beta = currentScore;
-                    bestMove = move;
+                    bestPossibleMove = move;
                 }
             }
             player.undoMove();
-
             if(alpha >= beta) {
                 break;
             }
         }
-
-        return new Tuple<>(bestMove, player.getPlayerColour() == colour ? alpha : beta);
+        return new Tuple<>(bestPossibleMove, player.getPlayerColour() == colour ? alpha : beta);
     }
 }

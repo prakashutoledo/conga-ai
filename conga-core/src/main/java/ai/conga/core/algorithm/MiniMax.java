@@ -24,7 +24,6 @@ public class MiniMax<P extends Player, M extends Move> {
         this.maxDepth = maxDepth;
     }
 
-    @NotNull
     public Tuple<M, Integer> bestMove() {
         return minimax(maxDepth, player.getPlayerColour());
     }
@@ -42,15 +41,14 @@ public class MiniMax<P extends Player, M extends Move> {
 
         for(M move : availableMoves) {
             player.updateMove(move);
+            currentScore = minimax(depth - 1, colour.nextTurn()).getY();
             if(player.getPlayerColour() == colour) {
-                currentScore = minimax(depth - 1, colour.nextTurn()).getY();
                 if(currentScore > bestScore) {
                     bestScore =  currentScore;
                     bestMove = move;
                 }
             }
             else {
-                currentScore = minimax(depth - 1, colour.nextTurn()).getY();
                 if(currentScore < bestScore) {
                     bestScore = currentScore;
                     bestMove = move;
