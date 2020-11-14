@@ -2,34 +2,34 @@ package ai.conga.console;
 
 import ai.conga.core.domain.Move;
 import ai.conga.core.util.Tuple;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Objects.requireNonNull;
-
-@SuppressWarnings("unchecked")
 public class CongaPlayerMove extends Move<CongaTile, CongaBoard, CongaPlayerMove> {
     private CongaPlayerMove() {
+        super();
     }
 
-    public CongaPlayerMove(CongaTile fromTile, List<Tuple<CongaTile, Integer>> tileTuples) {
-        requireNonNull(fromTile, "From tile should not be null");
-        requireNonNull(tileTuples, "Tuples of tile should not be null");
-        this.checkAndUpdateTiles(fromTile, tileTuples);
+    public CongaPlayerMove(CongaTile fromTile, List<Tuple<CongaTile, Integer>> originalTileTuples) {
+        super(fromTile, originalTileTuples);
     }
 
-    private void checkAndUpdateTiles(CongaTile fromTile, List<Tuple<CongaTile, Integer>> tileTuples) {
-        if (tileTuples.size() < 1 || tileTuples.size() > 3) {
+    @Override
+    protected void validateTiles(CongaTile fromTile, List<Tuple<CongaTile, Integer>> originalTileTuples) {
+        if (originalTileTuples.size() < 1 || originalTileTuples.size() > 3) {
             throw new IllegalArgumentException("Not a valid tuple size. Size should be between 1 and 3 inclusive");
         }
+    }
 
-        this.fromTile = fromTile;
-        this.toTiles = new CongaTile[tileTuples.size()];
+    @Override
+    public CongaTile[] getToTiles() {
+        /*CongaTile[] toTiles = new CongaTile[originalTileTuples.size()];
 
-        for (int index = 0; index < tileTuples.size(); index++) {
-            CongaTile tile = tileTuples.get(index).getX();
-            Integer movedStones = tileTuples.get(index).getY();
+        for (int index = 0; index < originalTileTuples.size(); index++) {
+            CongaTile tile = originalTileTuples.get(index).getX();
+            Integer movedStones = originalTileTuples.get(index).getY();
             if (tile.getTileColour() == fromTile.getTileColour()) {
                 tile.setStoneCount(movedStones + tile.getStoneCount());
             } else {
@@ -38,24 +38,31 @@ public class CongaPlayerMove extends Move<CongaTile, CongaBoard, CongaPlayerMove
             }
             toTiles[index] = tile;
         }
+        return toTiles;*/
+        return originalTileTuples.stream().map(this::mapToTile).toArray(CongaTile[]::new);
     }
 
+    private CongaTile mapToTile(Tuple<CongaTile, Integer> tileTuple) {
+        CongaTile originalTile = tileTuple.getX();
+        int movedStones = tileTuple.getY();
+        CongaTile newTile = originalTile.deepCopyOf();
 
-    @Override
-    public CongaTile[] getToTiles() {
-        return this.toTiles;
+        if (originalTile.getTileColour() == fromTile.getTileColour()) {
+            newTile.setStoneCount(movedStones + originalTile.getStoneCount());
+            newTile.setTileColour(fromTile.getTileColour());
+        }
+        else {
+            newTile.setStoneCount(movedStones);
+            newTile.setTileColour(fromTile.getTileColour());
+        }
+        return newTile;
     }
 
     @Override
-    public CongaBoard getCurrentlyMovedBoard(CongaBoard currentPlayerBoard) {
+    public CongaBoard getCurrentlyMovedBoard(@NotNull CongaBoard currentPlayerBoard) {
         CongaBoard movedBoard = currentPlayerBoard.deepCopyOf();
         movedBoard.updateBoard(this);
         return movedBoard;
-    }
-
-    @Override
-    public CongaTile getFromTile() {
-        return fromTile;
     }
 
 
@@ -63,12 +70,12 @@ public class CongaPlayerMove extends Move<CongaTile, CongaBoard, CongaPlayerMove
     public CongaPlayerMove deepCopyOf() {
         CongaPlayerMove congaPlayerMove = new CongaPlayerMove();
         congaPlayerMove.fromTile = fromTile.deepCopyOf();
-        congaPlayerMove.toTiles = Arrays.stream(toTiles).toArray(CongaTile[]::new);
+        congaPlayerMove.originalTileTuples = new ArrayList<>(originalTileTuples);
         return congaPlayerMove;
     }
 
     @Override
     public String toString() {
-        return toTiles.toString();
+        return "";
     }
 }

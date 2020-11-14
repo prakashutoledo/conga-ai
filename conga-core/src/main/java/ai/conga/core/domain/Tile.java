@@ -1,6 +1,7 @@
 package ai.conga.core.domain;
 
 import ai.conga.core.util.Tuple;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Abstract Tile class
@@ -9,7 +10,7 @@ import ai.conga.core.util.Tuple;
 public abstract class Tile<T extends Tile<T>> implements Copy<T>{
     protected Tuple<Integer, Integer> index;
 
-    public Tile(Tuple<Integer, Integer> index) {
+    public Tile(@NotNull Tuple<Integer, Integer> index) {
         this.index = index;
     }
 
@@ -27,7 +28,7 @@ public abstract class Tile<T extends Tile<T>> implements Copy<T>{
 
     public abstract void emptyTile();
 
-    public abstract void updateTile(T tile);
+    public abstract void updateTile(@NotNull T tile);
 
     @Override
     public abstract T deepCopyOf();

@@ -9,8 +9,8 @@ public class Tuple<X,Y> implements Copy<Tuple<X,Y>> {
     private final Y y;
 
     public Tuple(X x, Y y) {
-        Objects.requireNonNull(x, "X value should not be null");
-        Objects.requireNonNull(y, "X value should not be null");
+        //Objects.requireNonNull(x, "X value should not be null");
+        //Objects.requireNonNull(y, "X value should not be null");
         this.x = x;
         this.y = y;
     }

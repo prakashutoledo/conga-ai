@@ -15,7 +15,7 @@ public abstract class Player<B extends Board, M extends Move, P extends Player<B
     protected Player() {
     }
 
-    public Player(Colour playerColour, B board) {
+    public Player(@NotNull Colour playerColour, @NotNull B board) {
         this.playerColour = playerColour;
         this.board = board;
     }
@@ -32,15 +32,17 @@ public abstract class Player<B extends Board, M extends Move, P extends Player<B
     }
 
     public boolean isWinner() {
-        return supplier(playerColour.nextTurn()).get().isEmpty();
+        return toSupplier(playerColour.nextTurn()).get().isEmpty();
     }
 
     public void updateMove(@NotNull M move) {
+        pastMove.push(move);
         board.updateBoard(move);
     }
 
+    @NotNull
     public List<M> getAllPossibleMoves() {
-        Supplier<List<M>> playerMoves =  supplier(playerColour);
+        Supplier<List<M>> playerMoves =  toSupplier(playerColour);
 
         if(isWinner() || playerMoves.get().isEmpty()) {
             return Collections.emptyList();
@@ -49,7 +51,7 @@ public abstract class Player<B extends Board, M extends Move, P extends Player<B
         return playerMoves.get();
     }
 
-    protected Supplier<List<M>> supplier(@NotNull Colour colour) {
+    protected Supplier<List<M>> toSupplier(@NotNull Colour colour) {
         return () -> board.getAllPossibleMoves(colour);
     }
 

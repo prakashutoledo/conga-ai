@@ -9,49 +9,57 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class MiniMax<P extends Player, M extends Move> {
-    private final P player;
+    private static final int MAX_MINIMAX_TREE_DEPTH = 4;
 
-    public MiniMax(@NotNull P player) {
+    private final P player;
+    private final int maxDepth;
+
+    public MiniMax(P player) {
+        this(player, MAX_MINIMAX_TREE_DEPTH);
+    }
+
+    public MiniMax(@NotNull P player, int maxDepth) {
         this.player = player;
+        this.maxDepth = maxDepth;
     }
 
     @NotNull
     public Tuple<M, Integer> bestMove() {
-        return minimax(3, player.getPlayerColour());
+        return minimax(maxDepth, player.getPlayerColour());
     }
 
-    public Tuple<M, Integer> minimax(int depth, @NotNull Colour colour) {
+    private Tuple<M, Integer> minimax(int depth, @NotNull Colour colour) {
+        System.out.println(depth + " " + colour);
         M bestMove = null;
         int bestScore = player.getPlayerColour() == colour ? Integer.MIN_VALUE : Integer.MAX_VALUE;
         List<M> availableMoves = player.getAllPossibleMoves();
         int currentScore;
-
+        
         if(availableMoves.isEmpty() || depth == 0) {
+            System.out.println("True");
             bestScore = player.getBoard().evaluateHeuristics();
-        }
+        } else {
+            for(M move : availableMoves) {
+                player.updateMove(move);
+                player.getBoard().display();
+                if(player.getPlayerColour() == colour) {
+                    currentScore = minimax(depth - 1, colour.nextTurn()).getY();
 
-        for(M move : availableMoves) {
-            player.updateMove(move);
-            if(player.getPlayerColour() == colour) {
-                currentScore = minimax(depth - 1, colour.nextTurn()).getY();
-
-                if(currentScore > bestScore) {
-                    bestScore =  currentScore;
-                    bestMove = move;
+                    if(currentScore > bestScore) {
+                        bestScore =  currentScore;
+                        bestMove = move;
+                    }
                 }
-            }
-            else {
-                currentScore = minimax(depth - 1, colour.nextTurn()).getY();
-                bestMove = move;
-
-                if(currentScore < bestScore) {
-                    bestScore = currentScore;
-                    bestMove = move;
+                else {
+                    currentScore = minimax(depth - 1, colour.nextTurn()).getY();
+                    if(currentScore < bestScore) {
+                        bestScore = currentScore;
+                        bestMove = move;
+                    }
                 }
+                player.undoMove();
             }
-            player.undoMove();
         }
-
         return new Tuple<>(bestMove, bestScore);
     }
 }

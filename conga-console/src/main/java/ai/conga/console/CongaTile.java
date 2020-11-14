@@ -1,7 +1,6 @@
 package ai.conga.console;
 
 import ai.conga.core.domain.Colour;
-import ai.conga.core.domain.Copy;
 import ai.conga.core.domain.Tile;
 import ai.conga.core.util.Tuple;
 

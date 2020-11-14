@@ -30,6 +30,8 @@ public class MiniMaxAgent extends Player<CongaBoard, CongaPlayerMove, MiniMaxAge
 
     @Override
     public void undoMove() {
+        CongaPlayerMove lastMove = pastMove.pop();
+        board.revertBoard(lastMove);
     }
 
     @Override

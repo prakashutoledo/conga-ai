@@ -30,6 +30,21 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
                 board[row][column] = new CongaTile(row, column);
             }
         }
+
+        board[0][0].setTileColour(Colour.WHITE);
+        board[0][0].setStoneCount(10);
+
+        board[0][1].setTileColour(Colour.BLACK);
+        board[0][1].setStoneCount(7);
+
+        board[1][0].setTileColour(Colour.BLACK);
+        board[1][0].setStoneCount(2);
+        board[3][3].setTileColour(Colour.BLACK);
+        board[3][3].setStoneCount(1);
+
+
+
+
         /*board[0][10].setStoneCount(1);
         board[0][1].setTileColour(Colour.BLACK);
         board[1][1].setStoneCount(1);
@@ -41,16 +56,16 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
         board[3][3].setStoneCount(10);
         board[3][3].setTileColour(Colour.WHITE);*/
 
-        board[0][0].setStoneCount(1);
+        /*board[0][0].setStoneCount(1);
         board[0][0].setTileColour(Colour.WHITE);
         board[0][1].setStoneCount(1);
         board[0][1].setTileColour(Colour.WHITE);
         board[0][2].setStoneCount(1);
-        board[0][2].setTileColour(Colour.WHITE);
+        board[0][2].setTileColour(Colour.WHITE);*/
         //board[1][2].setStoneCount(2);
         //board[1][2].setTileColour(Colour.WHITE);
 
-        board[1][1].setStoneCount(10);
+        /*board[1][1].setStoneCount(10);
         board[1][1].setTileColour(Colour.BLACK);
 
         board[2][2].setStoneCount(1);
@@ -60,7 +75,7 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
         board[2][0].setStoneCount(1);
         board[2][0].setTileColour(Colour.WHITE);
         board[1][0].setStoneCount(2);
-        board[1][0].setTileColour(Colour.WHITE);
+        board[1][0].setTileColour(Colour.WHITE);*/
 
         /*board[3][3].setStoneCount(5);
         board[3][3].setTileColour(Colour.BLACK);
@@ -148,17 +163,38 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
     }
 
     @Override
-    public void updateBoard(@NotNull CongaPlayerMove playerMove) {
-            for (CongaTile tile : playerMove.getToTiles()) {
-                board[tile.getRowIndex()][tile.getColumnIndex()].updateTile(tile);
-            }
-            Tuple<Integer, Integer> fromTileIndex = playerMove.getFromTile().getIndex();
-            CongaTile tile = board[fromTileIndex.getX()][fromTileIndex.getY()];
-            tile.emptyTile();
+    public void updateBoard(@NotNull final CongaPlayerMove playerMove) {
+        Tuple<Integer, Integer> fromTileIndex = playerMove.getFromTile().getIndex();
+
+        StringBuilder builder =  new StringBuilder();
+        builder.append(String.format("Player: %s moved from tile (%d,%d) '%d' stones to tiles: ",
+                playerMove.getFromTile().getTileColour(),
+                fromTileIndex.getX(), fromTileIndex.getY(), playerMove.getFromTile().getStoneCount()));
+
+        for (CongaTile tile : playerMove.getToTiles()) {
+            board[tile.getRowIndex()][tile.getColumnIndex()].updateTile(tile);
+            builder.append(String.format("(%d,%d) '%d' stones, ", tile.getRowIndex(), tile.getColumnIndex(), tile.getStoneCount()));
+        }
+
+        CongaTile tile = board[fromTileIndex.getX()][fromTileIndex.getY()];
+        tile.emptyTile();
+        out.println(builder.toString().replaceAll(",\\s$", ""));
     }
 
     @Override
-    public List<CongaPlayerMove> getAllPossibleMoves(final Colour playerColour) {
+    public void revertBoard(@NotNull final CongaPlayerMove playerMove) {
+        CongaTile fromTile = playerMove.getFromTile();
+        board[fromTile.getRowIndex()][fromTile.getColumnIndex()].updateTile(fromTile);
+
+        for(var tuple : playerMove.getOriginalTileTuples()) {
+            CongaTile congaTile = tuple.getX();
+            board[congaTile.getRowIndex()][congaTile.getColumnIndex()].updateTile(congaTile);
+        }
+    }
+
+
+    @Override
+    public List<CongaPlayerMove> getAllPossibleMoves(@NotNull final Colour playerColour) {
         return Arrays.stream(board).flatMap(Arrays::stream).filter(tile -> tile.getTileColour() == playerColour)
                 .map(this::getAllPossibleMoves).flatMap(List::stream).collect(Collectors.toList());
     }
@@ -166,10 +202,10 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
     public List<CongaPlayerMove> getAllPossibleMoves(final CongaTile tile) {
        return Arrays.stream(MoveDirection.values()).map(direction -> getNextMove(tile, direction, tile.getTileColour()))
                 .filter(tuple -> tuple.getX() != INVALID_TILE && tuple.getY() != MoveDirection.INVALID)
-                .map(movedTuple -> new CongaPlayerMove(tile, this.getAllMovedTiles(tile.getStoneCount(), movedTuple, tile.getTileColour()))).collect(Collectors.toList());
+                .map(movedTuple -> new CongaPlayerMove(tile.deepCopyOf(), this.getAllMovedTiles(tile.getStoneCount(), movedTuple, tile.getTileColour()))).collect(Collectors.toList());
     }
     @NotNull
-    public Tuple<CongaTile, MoveDirection> getNextMove(@NotNull  CongaTile tile, MoveDirection direction, @NotNull Colour colour) {
+    public Tuple<CongaTile, MoveDirection> getNextMove(@NotNull CongaTile tile, MoveDirection direction, @NotNull Colour colour) {
         Tuple<CongaTile, MoveDirection> moveDirectionTuple =  new Tuple<>(INVALID_TILE, MoveDirection.INVALID);
         switch (direction) {
             case EAST:
@@ -234,7 +270,7 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
         return moveDirectionTuple;
     }
 
-    public List<Tuple<CongaTile, Integer>> getAllMovedTiles(int movedStones, Tuple<CongaTile, MoveDirection> movedTuple, Colour colour) {
+    public List<Tuple<CongaTile, Integer>> getAllMovedTiles(int movedStones, @NotNull Tuple<CongaTile, MoveDirection> movedTuple, @NotNull Colour colour) {
         List<Tuple<CongaTile, Integer>> allMovedList = new ArrayList<>();
         List<CongaTile> orderedTiles = new ArrayList<>(Collections.singletonList(movedTuple.getX()));
 

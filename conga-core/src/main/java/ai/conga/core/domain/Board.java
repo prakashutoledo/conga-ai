@@ -1,4 +1,6 @@
 package ai.conga.core.domain;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
@@ -25,9 +27,11 @@ public abstract class Board<T extends Tile<T>, M extends Move<T,B,M>, B extends 
 
     public abstract void display();
 
-    public abstract void updateBoard(final M playerMove);
+    public abstract void updateBoard(@NotNull final M playerMove);
 
-    public abstract List<M> getAllPossibleMoves(final Colour playerColour);
+    public abstract void revertBoard(@NotNull final M playerMove);
+
+    public abstract List<M> getAllPossibleMoves(@NotNull final Colour playerColour);
 
     /**
      * Returns the deep copy of {@link T} if given row and column index are valid index and are matched
@@ -42,18 +46,9 @@ public abstract class Board<T extends Tile<T>, M extends Move<T,B,M>, B extends 
         return rows;
     }
 
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
     public int getColumns() {
         return columns;
     }
-
-    public void setColumns(int columns) {
-        this.columns = columns;
-    }
-
 
     @Override
     public abstract B deepCopyOf();
