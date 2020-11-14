@@ -1,7 +1,7 @@
 package ai.conga.console.agent;
 
-import ai.conga.console.CongaBoard;
-import ai.conga.console.CongaPlayerMove;
+import ai.conga.console.game.CongaBoard;
+import ai.conga.console.game.CongaPlayerMove;
 import ai.conga.core.algorithm.MiniMax;
 import ai.conga.core.domain.Colour;
 import ai.conga.core.domain.Player;
@@ -25,7 +25,7 @@ public class MiniMaxAgent extends Player<CongaBoard, CongaPlayerMove, MiniMaxAge
     @Override
     public void makeMove() {
         Tuple<CongaPlayerMove, Integer> moveTuple = miniMax.bestMove();
-        board.updateBoard(moveTuple.getX());
+        board.updateBoard(moveTuple.getX(), true);
     }
 
     @Override

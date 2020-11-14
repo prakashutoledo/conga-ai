@@ -1,6 +1,6 @@
 package ai.conga.console.util;
 
-import ai.conga.console.CongaTile;
+import ai.conga.console.game.CongaTile;
 
 public final class CongaConsoleGlobals {
     public static final String DIVIDER_TILE_LANE = "|";

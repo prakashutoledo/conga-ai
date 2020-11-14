@@ -1,4 +1,4 @@
-package ai.conga.console;
+package ai.conga.console.game;
 
 import ai.conga.core.domain.Colour;
 import ai.conga.core.domain.Tile;

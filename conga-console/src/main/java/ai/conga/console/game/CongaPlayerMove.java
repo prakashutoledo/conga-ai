@@ -1,4 +1,4 @@
-package ai.conga.console;
+package ai.conga.console.game;
 
 import ai.conga.core.domain.Move;
 import ai.conga.core.util.Tuple;
@@ -49,19 +49,18 @@ public class CongaPlayerMove extends Move<CongaTile, CongaBoard, CongaPlayerMove
 
         if (originalTile.getTileColour() == fromTile.getTileColour()) {
             newTile.setStoneCount(movedStones + originalTile.getStoneCount());
-            newTile.setTileColour(fromTile.getTileColour());
         }
         else {
             newTile.setStoneCount(movedStones);
-            newTile.setTileColour(fromTile.getTileColour());
         }
+        newTile.setTileColour(fromTile.getTileColour());
         return newTile;
     }
 
     @Override
     public CongaBoard getCurrentlyMovedBoard(@NotNull CongaBoard currentPlayerBoard) {
         CongaBoard movedBoard = currentPlayerBoard.deepCopyOf();
-        movedBoard.updateBoard(this);
+        movedBoard.updateBoard(this, false);
         return movedBoard;
     }
 

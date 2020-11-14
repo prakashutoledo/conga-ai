@@ -1,4 +1,4 @@
-package ai.conga.console;
+package ai.conga.console.game;
 
 import ai.conga.core.domain.Board;
 import ai.conga.core.domain.Colour;
@@ -34,13 +34,8 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
         board[0][0].setTileColour(Colour.WHITE);
         board[0][0].setStoneCount(10);
 
-        board[0][1].setTileColour(Colour.BLACK);
-        board[0][1].setStoneCount(7);
-
-        board[1][0].setTileColour(Colour.BLACK);
-        board[1][0].setStoneCount(2);
         board[3][3].setTileColour(Colour.BLACK);
-        board[3][3].setStoneCount(1);
+        board[3][3].setStoneCount(10);
 
 
 
@@ -163,22 +158,24 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
     }
 
     @Override
-    public void updateBoard(@NotNull final CongaPlayerMove playerMove) {
+    public void updateBoard(@NotNull final CongaPlayerMove playerMove, boolean showDetails) {
         Tuple<Integer, Integer> fromTileIndex = playerMove.getFromTile().getIndex();
 
         StringBuilder builder =  new StringBuilder();
-        builder.append(String.format("Player: %s moved from tile (%d,%d) '%d' stones to tiles: ",
+        builder.append(String.format("Player: '%s' moved from tile (%d,%d) '%d' stones to tiles: ",
                 playerMove.getFromTile().getTileColour(),
                 fromTileIndex.getX(), fromTileIndex.getY(), playerMove.getFromTile().getStoneCount()));
 
         for (CongaTile tile : playerMove.getToTiles()) {
-            board[tile.getRowIndex()][tile.getColumnIndex()].updateTile(tile);
             builder.append(String.format("(%d,%d) '%d' stones, ", tile.getRowIndex(), tile.getColumnIndex(), tile.getStoneCount()));
+            board[tile.getRowIndex()][tile.getColumnIndex()].updateTile(tile);
         }
 
         CongaTile tile = board[fromTileIndex.getX()][fromTileIndex.getY()];
         tile.emptyTile();
-        out.println(builder.toString().replaceAll(",\\s$", ""));
+        if(showDetails) {
+            out.println(builder.toString().replaceAll(",\\s$", ""));
+        }
     }
 
     @Override

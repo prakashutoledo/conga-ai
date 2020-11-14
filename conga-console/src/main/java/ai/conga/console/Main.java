@@ -1,8 +1,10 @@
 package ai.conga.console;
 
 import ai.conga.console.agent.MiniMaxAgent;
+import ai.conga.console.game.CongaBoard;
 import ai.conga.core.domain.Colour;
-import java.util.List;
+
+import java.util.Random;
 
 public class Main {
     public static void main(String... args) {
@@ -11,10 +13,13 @@ public class Main {
         System.out.println("Start Game------------------------");
         MiniMaxAgent agent1 = new MiniMaxAgent(Colour.BLACK, board);
         MiniMaxAgent agent2 = new MiniMaxAgent(Colour.WHITE, board);
-        agent1.makeMove();
+        /*agent1.makeMove();
         board.display();
         agent1.getBoard().display();
-        agent1.getBoard().display();
+        agent1.getBoard().display();*/
+        Random random =  new Random();
+        System.out.println(random.nextInt(5));
+        System.out.println(random.nextInt(6));
         /*agent2.updateMove(agent2.getBoard().getAllPossibleMoves(agent2.getBoard().getTile(3,3)).get(0));
         agent2.getBoard().display();
         agent1.getBoard().display();*/

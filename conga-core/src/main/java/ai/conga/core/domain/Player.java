@@ -2,11 +2,13 @@ package ai.conga.core.domain;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static java.util.Collections.*;
+
+@SuppressWarnings("unchecked")
 public abstract class Player<B extends Board, M extends Move, P extends Player<B,M,P>> implements Copy<P> {
     protected Deque<M> pastMove;
     protected Colour playerColour;
@@ -32,26 +34,32 @@ public abstract class Player<B extends Board, M extends Move, P extends Player<B
     }
 
     public boolean isWinner() {
-        return toSupplier(playerColour.nextTurn()).get().isEmpty();
+        return possibleMovesSupplier(playerColour.nextTurn()).get().isEmpty();
     }
 
+    /**
+     * Update the current board for this player with given move sequence. This method is only used for to store the
+     * the current move for this player to stack and if this player wanted to undo the past move.
+     * @param move current move to update board
+     */
+    @SuppressWarnings("unchecked")
     public void updateMove(@NotNull M move) {
         pastMove.push(move);
-        board.updateBoard(move);
+        board.updateBoard(move, false);
     }
 
     @NotNull
     public List<M> getAllPossibleMoves() {
-        Supplier<List<M>> playerMoves =  toSupplier(playerColour);
+        Supplier<List<M>> playerMoves =  possibleMovesSupplier(playerColour);
 
         if(isWinner() || playerMoves.get().isEmpty()) {
-            return Collections.emptyList();
+            return emptyList();
         }
 
         return playerMoves.get();
     }
 
-    protected Supplier<List<M>> toSupplier(@NotNull Colour colour) {
+    protected Supplier<List<M>> possibleMovesSupplier(@NotNull Colour colour) {
         return () -> board.getAllPossibleMoves(colour);
     }
 

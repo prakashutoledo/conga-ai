@@ -1,8 +1,6 @@
 package ai.conga.core.domain;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.List;
 
 /**
@@ -27,7 +25,7 @@ public abstract class Board<T extends Tile<T>, M extends Move<T,B,M>, B extends 
 
     public abstract void display();
 
-    public abstract void updateBoard(@NotNull final M playerMove);
+    public abstract void updateBoard(@NotNull final M playerMove, boolean showDetails);
 
     public abstract void revertBoard(@NotNull final M playerMove);
 
