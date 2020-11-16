@@ -40,16 +40,16 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
 
 
 
-        /*board[0][1].setStoneCount(1);
-        board[0][1].setTileColour(Colour.BLACK);
+       /* board[2][1].setStoneCount(1);
+        board[2][1].setTileColour(Colour.BLACK);
         board[1][1].setStoneCount(1);
         board[1][1].setTileColour(Colour.BLACK);
         board[2][0].setStoneCount(1);
         board[2][0].setTileColour(Colour.BLACK);
-        board[0][3].setStoneCount(7);
-        board[0][3].setTileColour(Colour.BLACK);
-        board[0][0].setStoneCount(10);
-        board[0][0].setTileColour(Colour.WHITE);*/
+        board[2][3].setStoneCount(7);
+        board[2][3].setTileColour(Colour.BLACK);
+        board[3][3].setStoneCount(10);
+        board[3][3].setTileColour(Colour.WHITE);*/
 
         /*board[0][0].setStoneCount(1);
         board[0][0].setTileColour(Colour.WHITE);
@@ -97,14 +97,23 @@ public class CongaBoard extends Board<CongaTile, CongaPlayerMove, CongaBoard> {
                 }
             }
         }
+        if(whiteCount == 0) {
+            return Integer.MAX_VALUE;
+        }
 
-        if (whiteCount == 0) {
+        if(blackCount == 0) {
+            return Integer.MIN_VALUE;
+        }
+
+        return blackCount - whiteCount;
+
+        /*if (whiteCount == 0) {
             return Integer.MAX_VALUE;
         } else if (blackCount == 0) {
             return Integer.MIN_VALUE;
         } else {
             return blackCount - whiteCount;
-        }
+        }*/
     }
 
     private int calculateEntropy(int count, int rowIndex, int columnIndex) {

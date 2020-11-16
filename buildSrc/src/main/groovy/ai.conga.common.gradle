@@ -1,5 +1,6 @@
 plugins {
     id "java"
+    id "com.github.roroche.plantuml"
 }
 
 repositories {
@@ -15,6 +16,13 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
+
+classDiagram {
+    packageName = "ai.conga"
+    outputFile = project.file("$buildDir/${project.name}.plantuml")
+}
+
+tasks.named('buildClassDiagram').get().dependsOn build
 
 tasks.named('test') {
     useJUnitPlatform()

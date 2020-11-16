@@ -75,6 +75,11 @@ public class CongaPlayerMove extends Move<CongaTile, CongaBoard, CongaPlayerMove
 
     @Override
     public String toString() {
-        return "";
+        StringBuilder builder = new StringBuilder();
+        builder.append(String.format("From tile: %s to tiles: ", fromTile.description()));
+        for(var tile: this.originalTileTuples) {
+            builder.append(tile.getX().description()).append(",");
+        }
+        return builder.toString();
     }
 }

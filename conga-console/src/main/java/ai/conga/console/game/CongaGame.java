@@ -31,6 +31,7 @@ public class CongaGame extends Game<CongaBoard> {
             currentPlayer.makeMove();
             currentPlayer.getBoard().display();
             if(currentPlayer.isWinner()) {
+                System.out.println(currentPlayer.getBoard().evaluateHeuristics());
                 if(currentPlayer.getPlayerColour() == Colour.BLACK) {
                     out.println(String.format("Random Agent(%s) you suck in this game.", Colour.WHITE));
                     out.println(String.format("Minimax Agent(%s) is winner!!!", Colour.BLACK));

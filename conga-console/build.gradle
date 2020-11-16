@@ -1,19 +1,11 @@
 plugins {
     id 'ai.conga.application'
-    id "com.github.roroche.plantuml" version "1.0.2"
 }
 
 dependencies {
     implementation project(':conga-core')
     implementation 'org.fusesource.jansi:jansi:2.0.1'
 }
-
-classDiagram {
-    packageName = "ai.conga"
-    outputFile = project.file("$buildDir/conga-console.plantuml")
-}
-
-buildClassDiagram.dependsOn build
 
 application {
     mainClass = 'ai.conga.console.CongaConsoleApplication'

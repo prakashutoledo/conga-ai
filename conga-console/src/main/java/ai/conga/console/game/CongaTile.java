@@ -60,4 +60,8 @@ public class CongaTile extends Tile<CongaTile> {
     public String toString() {
         return String.format("%s %s",stoneCount == 0 ? "" : Integer.toString(stoneCount) ,tileColour);
     }
+
+    public String description() {
+        return String.format("(%d,%d):%d:%s", index.getX(), index.getY(), stoneCount, tileColour);
+    }
 }
