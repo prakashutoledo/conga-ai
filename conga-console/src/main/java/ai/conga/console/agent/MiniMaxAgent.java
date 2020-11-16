@@ -13,6 +13,9 @@ import com.google.common.cache.LoadingCache;
 import java.util.ArrayDeque;
 import java.util.concurrent.ExecutionException;
 
+/**
+ *
+ */
 public class MiniMaxAgent extends Player<CongaBoard, CongaPlayerMove, MiniMaxAgent> {
     MiniMax<MiniMaxAgent, CongaPlayerMove> miniMax;
     LoadingCache<String, Tuple<CongaPlayerMove, Integer>> usedMoveCache;
@@ -35,12 +38,7 @@ public class MiniMaxAgent extends Player<CongaBoard, CongaPlayerMove, MiniMaxAge
 
     @Override
     public void makeMove() {
-        Tuple<CongaPlayerMove, Integer> moveTuple = null;
-        try {
-            moveTuple = usedMoveCache.get(board.toString());
-        } catch (ExecutionException e) {
-            moveTuple = miniMax.bestMove();
-        }
+        Tuple<CongaPlayerMove, Integer> moveTuple = miniMax.bestMove();
         board.updateBoard(moveTuple.getX(), true);
     }
 

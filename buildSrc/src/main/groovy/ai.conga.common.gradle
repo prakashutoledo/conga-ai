@@ -1,11 +1,11 @@
 plugins {
-    id 'java'
+    id "java"
 }
 
 repositories {
+    google()
     jcenter()
     mavenCentral()
-
 }
 
 dependencies {

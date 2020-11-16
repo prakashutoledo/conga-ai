@@ -1,3 +1,11 @@
 plugins {
-    id 'conga.ai.java-library-conventions'
+    id 'ai.conga.library'
+    id "com.github.roroche.plantuml" version "1.0.2"
 }
+
+classDiagram {
+    packageName = "ai.conga"
+    outputFile = project.file("$buildDir/conga-core.plantuml")
+}
+
+buildClassDiagram.dependsOn build

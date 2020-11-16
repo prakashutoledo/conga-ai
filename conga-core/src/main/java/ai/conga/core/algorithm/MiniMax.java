@@ -15,6 +15,7 @@ public class MiniMax<P extends Player, M extends Move> {
     private final P player;
     private final int maxDepth;
 
+
     public MiniMax(P player) {
         this(player, MAX_MINIMAX_TREE_DEPTH);
     }
@@ -23,6 +24,7 @@ public class MiniMax<P extends Player, M extends Move> {
         this.player = player;
         this.maxDepth = maxDepth;
     }
+
 
     public Tuple<M, Integer> bestMove() {
         return minimax(maxDepth, player.getPlayerColour());

@@ -1,2 +1,7 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
 rootProject.name = 'conga-ai'
 include('conga-core', 'conga-console')

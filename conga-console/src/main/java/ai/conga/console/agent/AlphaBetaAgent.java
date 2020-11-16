@@ -3,7 +3,6 @@ package ai.conga.console.agent;
 import ai.conga.console.game.CongaBoard;
 import ai.conga.console.game.CongaPlayerMove;
 import ai.conga.core.algorithm.AlphaBetaPruning;
-import ai.conga.core.algorithm.RandomUtil;
 import ai.conga.core.domain.Colour;
 import ai.conga.core.domain.Player;
 import ai.conga.core.util.Tuple;
