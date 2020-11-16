@@ -22,7 +22,7 @@ classDiagram {
     outputFile = project.file("$buildDir/${project.name}.plantuml")
 }
 
-tasks.named('buildClassDiagram').get().dependsOn build
+tasks.getByName('buildClassDiagram').dependsOn build
 
 tasks.named('test') {
     useJUnitPlatform()
