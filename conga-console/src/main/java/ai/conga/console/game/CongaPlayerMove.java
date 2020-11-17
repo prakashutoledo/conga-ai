@@ -73,6 +73,23 @@ public class CongaPlayerMove extends Move<CongaTile, CongaBoard, CongaPlayerMove
         return congaPlayerMove;
     }
 
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CongaPlayerMove move = (CongaPlayerMove) o;
+
+        if (!fromTile.equals(move.fromTile)) return false;
+        return originalTileTuples.equals(move.originalTileTuples);
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

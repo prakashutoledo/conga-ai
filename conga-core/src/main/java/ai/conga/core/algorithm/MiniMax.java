@@ -10,10 +10,11 @@ import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class MiniMax<P extends Player, M extends Move> {
-    private static final int MAX_MINIMAX_TREE_DEPTH = 3;
+    private static final int MAX_MINIMAX_TREE_DEPTH = 2;
 
     private final P player;
     private final int maxDepth;
+    private int nodeCount= 0;
 
 
     public MiniMax(P player) {
@@ -26,15 +27,28 @@ public class MiniMax<P extends Player, M extends Move> {
     }
 
 
-    public Tuple<M, Integer> bestMove() {
-        return minimax(maxDepth, player.getPlayerColour());
+    public Tuple<M, Tuple<Integer,Long>> bestMove() {
+        this.nodeCount = 0;
+        long start = System.currentTimeMillis();
+        Tuple<M, Integer> bestMove = minimax(maxDepth, player.getPlayerColour());
+        long end = System.currentTimeMillis();
+        System.out.printf("\nMinimax Nodes Visited: %d with elapsed time: %d milliseconds\n",
+                nodeCount, end - start);
+        return new Tuple<>(bestMove.getX(), new Tuple<>(nodeCount, end - start));
+    }
+
+    public Tuple<M, Tuple<Integer,Long>> best() {
+        this.nodeCount = 0;
+        long start = System.currentTimeMillis();
+        Tuple<M, Integer> bestMove = minimax(maxDepth, player.getPlayerColour());
+        long end = System.currentTimeMillis();
+        return new Tuple<>(bestMove.getX(), new Tuple<>(nodeCount, end - start));
     }
 
     private Tuple<M, Integer> minimax(int depth, @NotNull Colour colour) {
         int bestScore = player.getPlayerColour() == colour ? Integer.MIN_VALUE : Integer.MAX_VALUE;
         List<M> availableMoves = player.getAllPossibleMoves();
         M bestMove = RandomUtil.randomElement(availableMoves).orElse(null);
-        int currentScore;
 
         if(availableMoves.isEmpty() || depth == 0) {
             bestScore = player.getBoard().evaluateHeuristics();
@@ -43,7 +57,7 @@ public class MiniMax<P extends Player, M extends Move> {
 
         for(M move : availableMoves) {
             player.updateMove(move);
-            currentScore = minimax(depth - 1, colour.nextTurn()).getY();
+            int currentScore = minimax(depth - 1, colour.nextTurn()).getY();
             if(player.getPlayerColour() == colour) {
                 if(currentScore > bestScore) {
                     bestScore =  currentScore;
@@ -57,6 +71,7 @@ public class MiniMax<P extends Player, M extends Move> {
                 }
             }
             player.undoMove();
+            nodeCount++;
         }
         return new Tuple<>(bestMove, bestScore);
     }

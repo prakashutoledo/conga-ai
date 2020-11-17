@@ -3,10 +3,6 @@ package ai.conga.core.domain;
 import ai.conga.core.util.Tuple;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Abstract Tile class
- * @author Prakash Khadka
- */
 public abstract class Tile<T extends Tile<T>> implements Copy<T>{
     protected Tuple<Integer, Integer> index;
 

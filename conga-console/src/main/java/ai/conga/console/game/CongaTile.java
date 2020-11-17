@@ -57,6 +57,24 @@ public class CongaTile extends Tile<CongaTile> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CongaTile congaTile = (CongaTile) o;
+
+        if (stoneCount != congaTile.stoneCount) return false;
+        return tileColour == congaTile.tileColour;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = stoneCount;
+        result = 31 * result + tileColour.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return String.format("%s %s",stoneCount == 0 ? "" : Integer.toString(stoneCount) ,tileColour);
     }

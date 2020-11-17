@@ -13,29 +13,17 @@ import java.util.Optional;
 import java.util.Random;
 
 public class RandomAgent extends Player<CongaBoard, CongaPlayerMove, RandomAgent> {
-    private Random random;
     private RandomAgent() {}
 
     public RandomAgent(Colour playerColour, CongaBoard board) {
         super(playerColour, board);
         this.pastMove = new ArrayDeque<>();
-        this.random = new Random();
     }
 
     @Override
     public void makeMove() {
         RandomUtil.randomElement(possibleMovesSupplier(playerColour).get())
                 .ifPresent(randomMove -> board.updateBoard(randomMove, true));
-    }
-
-    @Override
-    public void undoMove() {
-        throw new UnsupportedOperationException("Not valid for random agent as we don't have to remember past moves");
-    }
-
-    @Override
-    public void updateMove(@NotNull CongaPlayerMove move) {
-        throw new UnsupportedOperationException("Not valid for random agent as we don't have past moves stacked");
     }
 
     @Override

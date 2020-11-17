@@ -10,7 +10,9 @@ import ai.conga.core.util.Tuple;
 import java.util.ArrayDeque;
 
 public class AlphaBetaAgent extends Player<CongaBoard, CongaPlayerMove, AlphaBetaAgent> {
-    AlphaBetaPruning<AlphaBetaAgent, CongaPlayerMove> alphaBetaPruning;
+    private AlphaBetaPruning<AlphaBetaAgent, CongaPlayerMove> alphaBetaPruning;
+    private int nodesVisited;
+    private long totalTimeElapsed;
 
     private AlphaBetaAgent() {
         super();
@@ -20,12 +22,24 @@ public class AlphaBetaAgent extends Player<CongaBoard, CongaPlayerMove, AlphaBet
         super(playerColour, board);
         this.alphaBetaPruning = new AlphaBetaPruning<>(this);
         this.pastMove = new ArrayDeque<>();
+        this.nodesVisited = 0;
+        this.totalTimeElapsed = 0;
     }
 
     @Override
     public void makeMove() {
-        Tuple<CongaPlayerMove, Integer> moveTuple = alphaBetaPruning.bestMove();
+        Tuple<CongaPlayerMove, Tuple<Integer,Long>> moveTuple = alphaBetaPruning.bestMove();
+        nodesVisited += moveTuple.getY().getX();
+        totalTimeElapsed += moveTuple.getY().getY();
         board.updateBoard(moveTuple.getX(), true);
+    }
+
+    public int getNodesVisited() {
+        return nodesVisited;
+    }
+
+    public long getTotalTimeElapsed() {
+        return totalTimeElapsed;
     }
 
     @Override

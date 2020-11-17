@@ -1,6 +1,6 @@
 package ai.conga.console.game;
 
-import ai.conga.console.agent.MiniMaxAgent;
+import ai.conga.console.agent.AlphaBetaAgent;
 import ai.conga.console.agent.RandomAgent;
 import ai.conga.core.domain.Colour;
 import ai.conga.core.domain.Game;
@@ -8,8 +8,10 @@ import ai.conga.core.domain.Player;
 import static java.lang.System.*;
 
 public class CongaGame extends Game<CongaBoard> {
-    private MiniMaxAgent blackPlayer;
+    private AlphaBetaAgent blackPlayer;
     private RandomAgent whitePlayer;
+    int totalBlackMove;
+    long totalElapsedTime;
 
     public CongaGame(CongaBoard board) {
         super(board);
@@ -17,8 +19,10 @@ public class CongaGame extends Game<CongaBoard> {
 
     @Override
     protected void initializePlayers(CongaBoard board) {
-        this.blackPlayer = new MiniMaxAgent(Colour.BLACK, board);
+        this.blackPlayer = new AlphaBetaAgent(Colour.BLACK, board);
         this.whitePlayer = new RandomAgent(Colour.WHITE, board);
+        this.totalBlackMove = 0;
+        this.totalElapsedTime = 0;
     }
 
     @Override
@@ -31,17 +35,24 @@ public class CongaGame extends Game<CongaBoard> {
             currentPlayer.makeMove();
             currentPlayer.getBoard().display();
             if(currentPlayer.isWinner()) {
-                System.out.println(currentPlayer.getBoard().evaluateHeuristics());
                 if(currentPlayer.getPlayerColour() == Colour.BLACK) {
-                    out.println(String.format("Random Agent(%s) you suck in this game.", Colour.WHITE));
-                    out.println(String.format("Minimax Agent(%s) is winner!!!", Colour.BLACK));
+                    out.println(String.format("AI Agent(Alpha-Beta) is winner!!!", Colour.BLACK));
+                    out.println(String.format("Average nodes visited : %d", blackPlayer.getNodesVisited()/totalBlackMove));
+                    out.println(String.format("Average nodes elapsed time : %d", blackPlayer.getTotalTimeElapsed()/totalBlackMove));
                 } else {
-                    out.println(String.format("Random Agent(%d) is winner!!!", Colour.BLACK));
+                    out.println(String.format("Random Agent(%d) is winner!!!", Colour.WHITE));
                     out.println("You Rock!!");
                 }
                 break;
             }
-            currentPlayer = currentPlayer == whitePlayer ? blackPlayer : whitePlayer;
+            if(currentPlayer == blackPlayer) {
+                currentPlayer = whitePlayer;
+                ++totalBlackMove;
+                ++totalElapsedTime;
+            }
+            else {
+                currentPlayer = blackPlayer;
+            }
         }
     }
 }
