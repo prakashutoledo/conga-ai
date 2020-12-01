@@ -1,3 +1,0 @@
-plugins {
-    id 'conga.ai.java-library-conventions'
-}

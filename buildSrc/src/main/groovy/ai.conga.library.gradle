@@ -1,0 +1,4 @@
+plugins {
+    id 'ai.conga.common'
+    id 'java-library'
+}

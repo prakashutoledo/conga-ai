@@ -1,0 +1,12 @@
+plugins {
+    id 'ai.conga.application'
+}
+
+dependencies {
+    implementation project(':conga-core')
+    implementation 'org.fusesource.jansi:jansi:2.0.1'
+}
+
+application {
+    mainClass = 'ai.conga.console.CongaConsoleApplication'
+}

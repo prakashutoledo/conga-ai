@@ -1,7 +1,0 @@
-plugins {
-    id 'conga.ai.java-library-conventions'
-}
-
-dependencies {
-    api project(':list')
-}
