@@ -1,0 +1,11 @@
+plugins {
+    id 'ai.conga.library'
+    id "com.github.roroche.plantuml"
+}
+
+classDiagram {
+    packageName = "ai.conga"
+    outputFile = project.file("$buildDir/conga-core.plantuml")
+}
+
+buildClassDiagram.dependsOn build
